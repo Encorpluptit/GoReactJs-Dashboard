@@ -54,7 +54,7 @@ func (db *Database) prepareEnv() {
 
 // Initialise sqlite Db
 func (db *Database) initSqlite() (err error) {
-	db.DB, err = gorm.Open(sqlite.Open("dev.db"), &gorm.Config{})
+	db.DB, err = gorm.Open(sqlite.Open("/database/dev.db"), &gorm.Config{})
 	if err != nil {
 		fmt.Printf("Cannot connect to %s database", db.Driver)
 		log.Fatal("This is the error:", err)

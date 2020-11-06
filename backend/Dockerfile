@@ -46,8 +46,8 @@ COPY --from=builder /api/main .
 #COPY --from=builder /api/.env .
 
 # Expose port 8080 to the outside world
-#EXPOSE 8080
-EXPOSE $API_PORT
+EXPOSE 8080
+#EXPOSE $PORT
 
 #Command to run the executable
 #CMD ["./main"]

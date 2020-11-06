@@ -19,9 +19,9 @@ func NewServer() (*Server, func()) {
 }
 
 func (s *Server) Init() {
-	s.Port = os.Getenv("API_PORT")
+	s.Port = os.Getenv("PORT")
 	if s.Port == "" {
-		s.Port = "8080"
+		s.Port = "8081"
 		log.Printf("Defaulting to port %s", s.Port)
 	}
 

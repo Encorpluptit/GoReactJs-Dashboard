@@ -1,10 +1,10 @@
 version: '3.3'
 services:
-  server:
+  server_dev:
     container_name: Dashboard-api
     build: .
     environment:
-      API_PORT: 8080
+      PORT: 8080
       # GIN_MODE: release
       GIN_MODE: debug
     expose:
@@ -13,14 +13,14 @@ services:
     #      - 8080:8080
     restart: on-failure
     volumes:
-      - api:/usr/src/api/
+      - api_dev:/usr/src/api_dev/
 #    depends_on:
 #      - fullstack-postgres
 #    networks:
 #      - fullstack
 
 volumes:
-  api:
+  api_dev:
 #  database_postgres:
 
 # Networks to be created to facilitate communication between containers

@@ -12,7 +12,8 @@ LABEL description="Temporary Image for Multi stage usage in Dashboard"
 
 # Install git.
 # Git is required for fetching the dependencies.
-RUN apk update && apk add --no-cache git
+# TODO: Add gcc only for dev
+RUN apk update && apk add --no-cache git gcc libc-dev
 
 # Set the current working directory inside the container
 WORKDIR /api
@@ -27,7 +28,9 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+# TODO: Enable CGo only for dev
+#RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+RUN GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Start a new stage from scratch
 FROM alpine:latest

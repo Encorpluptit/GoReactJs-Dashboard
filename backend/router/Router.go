@@ -20,15 +20,15 @@ func ApplyRoutes(r *gin.Engine) {
 		c.Status(http.StatusOK)
 	})
 	r.GET("/about.json", about)
-	//auth := r.Group("/" + rAuth)
-	//{
-	//	//projects.GET("/list", listProject)
-	//	//projects.GET("/get", findProjectById)
-	//	//projects.GET("/getByPath", findProjectByPath)
-	//	//projects.GET("/get/:"+RProject, findProjectByName)
-	//	//projects.POST("/add", addProject)
-	//	//projects.PATCH("/update", updateProject)
-	//	//projects.DELETE("/delete", deleteProject)
-	//}
+	auth := r.Group("/" + rAuth)
+	{
+		auth.POST("/login", login)
+		auth.POST("/register", register)
+
+		//projects.GET("/get/:"+RProject, findProjectByName)
+		//projects.POST("/add", addProject)
+		//projects.PATCH("/update", updateProject)
+		//projects.DELETE("/delete", deleteProject)
+	}
 
 }

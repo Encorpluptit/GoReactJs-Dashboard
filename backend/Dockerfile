@@ -5,7 +5,7 @@ FROM golang:alpine3.12 as builder
 # ENV GO111MODULE=on
 
 # Add Image info
-LABEL name='Golang 1.14 (alpine) Image'
+LABEL name='Golang 1.15 (alpine) Image'
 LABEL maintainer="Damien Bernard <damien.bernard@epitech.eu>"
 LABEL version="1.0"
 LABEL description="Temporary Image for Multi stage usage in Dashboard"
@@ -43,10 +43,10 @@ WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage. Observe we also copied the .env file
 COPY --from=builder /api/main .
-#COPY --from=builder /api/.env .
+COPY --from=builder /api/.env .
 
 # Expose port 8080 to the outside world
-EXPOSE 8080
+#EXPOSE 8080
 #EXPOSE $PORT
 
 #Command to run the executable

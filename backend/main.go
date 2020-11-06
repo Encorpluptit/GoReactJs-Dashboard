@@ -3,11 +3,20 @@ package main
 import (
 	"AppDev_DashBoard/router"
 	"AppDev_DashBoard/server"
+	"github.com/joho/godotenv"
 	"log"
+	"os"
 )
 
+func loadEnv() {
+	if os.Getenv("API_STATE") != "RELEASE" {
+		if godotenv.Load() != nil {
+			log.Fatalf("Cannot Load .env file.")
+		}
+	}
+}
 func main() {
-	// Setup the api for CLI's needs & gets ready to properly close it
+	loadEnv()
 	api, stopApi := server.NewServer()
 	router.ApplyRoutes(api.Router)
 	defer stopApi()

@@ -37,3 +37,22 @@ func (s *Server) Init() {
 func (s *Server) Destroy() {
 	//s.Db.Destroy()
 }
+
+//
+//func (s *Server) initialiseRoutes() {
+//
+//	// Home Route
+//	s.Router.HandleFunc("/", middlewares.SetMiddlewareJSON(Home)).Methods("GET")
+//	s.Router.HandleFunc("/hello", middlewares.SetMiddlewareJSON(Hello)).Methods("GET")
+//
+//	// Login Route
+//	s.Router.HandleFunc("/login", middlewares.SetMiddlewareJSON(s.Login)).Methods("POST")
+//
+//	//Users routes
+//	s.Router.HandleFunc("/users", middlewares.SetMiddlewareJSON(s.CreateUser)).Methods("POST")
+//	s.Router.HandleFunc("/users", middlewares.SetMiddlewareJSON(s.GetUsers)).Methods("GET")
+//	s.Router.HandleFunc("/users/{id}", middlewares.SetMiddlewareJSON(s.GetUser)).Methods("GET")
+//	s.Router.HandleFunc("/users/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.UpdateUser))).Methods("PUT")
+//	s.Router.HandleFunc("/users/{id}", middlewares.SetMiddlewareAuthentication(s.DeleteUser)).Methods("DELETE")
+//
+//}

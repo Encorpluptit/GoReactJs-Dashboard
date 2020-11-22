@@ -1,0 +1,52 @@
+version: '3.3'
+services:
+  server_dev:
+    container_name: Dashboard-api_prod
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      PORT: 6666
+      # GIN_MODE: release
+      GIN_MODE: debug
+    ports:
+      - 8080:6666
+    restart: on-failure
+    volumes:
+      - api_dev:/api_dev
+      - dashboard_db_dev:/database_dev
+
+  front:
+    container_name: dashboard
+    #    build: backend/
+    build:
+      context: front
+      dockerfile: Dockerfile.prod
+    depends_on:
+      - server
+    volumes:
+      - app_dev:/app_dev
+      - app_dev_node_modules:/app_dev/node_modules
+    ports:
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - fullstack
+
+#    depends_on:
+#      - fullstack-postgres
+#    networks:
+#      - fullstack
+
+volumes:
+  api_dev:
+  dashboard_db_dev:
+  app_dev:
+  app_dev_node_modules:
+#  database_postgres:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  fullstack:
+    driver: bridge

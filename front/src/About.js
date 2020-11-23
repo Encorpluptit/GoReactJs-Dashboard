@@ -36,7 +36,7 @@ export default function About() {
     const headers = {'Content-Type': 'application/json'}
     // fetch('https://api.npms.io/v2/search?q=react', {headers})
     // fetch('http://server/about.json', {headers})
-    fetch('http://Dashboard_server-dev/about.json', {headers})
+    fetch('http://server_dev/about.json', {headers})
         .then(response => response.json())
         // .then(data => this.setState({totalReactPackages: data.total}));
         .then(data => console.error(data)).then();

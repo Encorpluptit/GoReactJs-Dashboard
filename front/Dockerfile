@@ -1,6 +1,11 @@
 # pull official base image
 FROM node:13.12.0-alpine
 
+LABEL name='Node 13.12 (alpine) Image'
+LABEL maintainer="Damien Bernard <damien.bernard@epitech.eu>"
+LABEL version="1.0"
+LABEL description="Image for Front Node Development in Dashboard"
+
 # set working directory
 WORKDIR /app
 

@@ -27,6 +27,7 @@ type aboutServer struct {
 func dumpAboutJSON(c *gin.Context) aboutJson {
 	return aboutJson{
 		Customer: aboutCustomer{Host: c.ClientIP()},
+		//Customer: aboutCustomer{Host: c.ClientIP()},
 		Server: aboutServer{
 			Timestamp: time.Now().Unix(),
 			Services:  getServices(),

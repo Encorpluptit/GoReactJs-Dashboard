@@ -1,13 +1,12 @@
 version: '3.3'
 services:
   server_dev:
-    container_name: Dashboard-api_prod
+    container_name: Dashboard_server-dev
     build:
       context: backend
       dockerfile: Dockerfile
     environment:
       PORT: 6666
-      # GIN_MODE: release
       GIN_MODE: debug
     ports:
       - 8080:6666
@@ -17,13 +16,12 @@ services:
       - dashboard_db_dev:/database_dev
 
   front:
-    container_name: dashboard
-    #    build: backend/
+    container_name: dashboard_front-dev
     build:
       context: front
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     depends_on:
-      - server
+      - server_dev
     volumes:
       - app_dev:/app_dev
       - app_dev_node_modules:/app_dev/node_modules
@@ -49,4 +47,4 @@ volumes:
 # Networks to be created to facilitate communication between containers
 networks:
   fullstack:
-    driver: bridge
+#    driver: bridge

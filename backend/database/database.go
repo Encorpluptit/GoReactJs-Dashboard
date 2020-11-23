@@ -29,7 +29,6 @@ var BackendDB = &Database{}
 func Init() (db *Database, err error) {
 	BackendDB.prepareEnv()
 	if os.Getenv("GIN_MODE") == "release" {
-		log.Print("Database in Production mode")
 		BackendDB.DB, err = gorm.Open(sqlite.Open("prod.db"), &gorm.Config{})
 		err = BackendDB.initPostGreSql()
 	} else {
@@ -54,7 +53,7 @@ func (db *Database) prepareEnv() {
 
 // Initialise sqlite Db
 func (db *Database) initSqlite() (err error) {
-	db.DB, err = gorm.Open(sqlite.Open("/database/dev.db"), &gorm.Config{})
+	db.DB, err = gorm.Open(sqlite.Open("/database_dev/dev.db"), &gorm.Config{})
 	if err != nil {
 		fmt.Printf("Cannot connect to %s database", db.Driver)
 		log.Fatal("This is the error:", err)

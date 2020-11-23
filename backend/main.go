@@ -3,9 +3,12 @@ package main
 import (
 	"AppDev_DashBoard/router"
 	"AppDev_DashBoard/server"
+	"fmt"
 	"github.com/joho/godotenv"
 	"log"
+	"net"
 	"os"
+	"strings"
 )
 
 func loadEnv() {
@@ -20,9 +23,19 @@ func main() {
 	api, stopApi := server.NewServer()
 	router.ApplyRoutes(api.Router)
 	defer stopApi()
+	name, err := os.Hostname()
+	if err != nil {
+		fmt.Printf("Oops: %v\n", err)
+		return
+	}
 
-	// Starts the api
-	log.Println("Server runs on http://localhost:" + api.Port)
+	addrs, err := net.LookupHost(name)
+	if err != nil {
+		fmt.Printf("Oops: %v\n", err)
+		return
+	}
+
+	log.Printf("Server runs on http://%s:%s\n", strings.Join(addrs, ""), api.Port)
 	if err := api.Router.Run(); err != nil {
 		log.Fatalln(err)
 	}

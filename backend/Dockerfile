@@ -30,7 +30,8 @@ COPY . .
 # Build the Go app
 # TODO: Enable CGo only for dev
 #RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
-RUN GOOS=linux go build -a -installsuffix cgo -o main .
+#RUN GOOS=linux go build -a -installsuffix cgo -o main .
+RUN GOOS=linux go build -installsuffix cgo -o main .
 
 # Start a new stage from scratch
 FROM alpine:latest
@@ -49,8 +50,6 @@ COPY --from=builder /api/main .
 COPY --from=builder /api/.env .
 
 # Expose port 8080 to the outside world
-#EXPOSE 8080
-#EXPOSE $PORT
 
 #Command to run the executable
 #CMD ["./main"]

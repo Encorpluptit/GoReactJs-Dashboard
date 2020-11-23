@@ -1,11 +1,13 @@
 version: '3.3'
 services:
   server:
-    container_name: Dashboard-api
-    build: backend/
+    container_name: Dashboard-Server
+    build:
+      context: backend/
+      dockerfile: Dockerfile
     environment:
       PORT: 6666
-      GIN_MODE: debug
+      GIN_MODE: release
     ports:
       - 8080:6666
     restart: on-failure
@@ -18,17 +20,18 @@ services:
       - fullstack
 
   front:
-    container_name: dashboard
+    container_name: Dashboard-Front
     build:
       context: front/
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     depends_on:
       - server
     volumes:
       - app:/app
       - app_node_modules:/app/node_modules
     ports:
-      - 3000:3000
+#      - 3000:3000
+      - 3000:80
     environment:
       - CHOKIDAR_USEPOLLING=true
     networks:

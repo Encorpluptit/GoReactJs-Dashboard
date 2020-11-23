@@ -11,6 +11,7 @@ import (
 // login: Log User with Queries Username and Password.
 // Abort when error occurs.
 func login(c *gin.Context) {
+	log.Println("LOL ICI")
 	user := &models.User{
 		Username: c.Query("Username"),
 		Password: c.Query("Password"),

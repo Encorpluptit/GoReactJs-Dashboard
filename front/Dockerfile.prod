@@ -1,5 +1,9 @@
 # build environment
 FROM node:13.12.0-alpine as build
+LABEL name='Node 13.12 (alpine) Image'
+LABEL maintainer="Damien Bernard <damien.bernard@epitech.eu>"
+LABEL version="1.0"
+LABEL description="Temporary Image for Front Node Production in Dashboard"
 WORKDIR /app_dev
 ENV PATH /app_dev/node_modules/.bin:$PATH
 COPY package.json ./
@@ -11,6 +15,10 @@ RUN npm run build
 
 # production environment
 FROM nginx:stable-alpine
+LABEL name='Dashboard - Node Front Production Image'
+LABEL maintainer="Damien Bernard <damien.bernard@epitech.eu>"
+LABEL version="1.0"
+LABEL description="Node Front, running on port 3000"
 COPY --from=build /app_dev/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

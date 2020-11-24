@@ -119,25 +119,16 @@ export default function SignIn() {
           >
             Sign In
           </MyButton>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-            <MyButton
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="blue"
-              onClick={handleOnClick1}
-              className={classes.submit}
-            >
+          <MyButton
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="blue"
+            onClick={handleOnClick1}
+            className={classes.submit}
+          >
             Register
           </MyButton>
-            </Grid>
-          </Grid>
         </form>
       </div>
       <Box mt={8}>

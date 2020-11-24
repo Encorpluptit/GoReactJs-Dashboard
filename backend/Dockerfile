@@ -49,8 +49,6 @@ WORKDIR /root/
 COPY --from=builder /api/main .
 COPY --from=builder /api/.env .
 
-# Expose port 8080 to the outside world
-
 #Command to run the executable
 #CMD ["./main"]
 ENTRYPOINT ["./main"]

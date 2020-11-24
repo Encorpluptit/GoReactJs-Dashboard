@@ -17,7 +17,7 @@ services:
 #    depends_on:
 #      - fullstack-postgres
     networks:
-      - fullstack
+      - dashboard-network
 
   front:
     container_name: Dashboard-Front
@@ -33,8 +33,9 @@ services:
       - 3000:80
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - API_URL=${API_URL}
     networks:
-      - fullstack
+      - dashboard-network
 
 
 #  fullstack-postgres:
@@ -75,5 +76,5 @@ volumes:
 
 # Networks to be created to facilitate communication between containers
 networks:
-  fullstack:
+  dashboard-network:
     driver: bridge

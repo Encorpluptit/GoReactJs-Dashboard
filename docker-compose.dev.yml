@@ -16,6 +16,7 @@ services:
       - dashboard_db_dev:/database_dev
     networks:
       - dashboard-network
+
   front_dev:
     container_name: dashboard_front-dev
     build:
@@ -30,6 +31,8 @@ services:
       - 3000:3000
     environment:
       - CHOKIDAR_USEPOLLING=true
+#      - API_URL=${API_URL}
+      - REACT_APP_API_URL=${API_URL}
     networks:
       - dashboard-network
 

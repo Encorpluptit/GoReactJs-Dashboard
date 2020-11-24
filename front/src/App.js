@@ -52,13 +52,13 @@ export default function App() {
             <About />
           </Route>
           <Route path="/dashboard">
-            <ButtonAppBar />
+           <ButtonAppBar />
           </Route>
           <Route path="/register">
-            <Register />
+          <Register />
           </Route>
           <Route path="/">
-            <Login />
+           <Login />
           </Route>
         </Switch>
       </div>

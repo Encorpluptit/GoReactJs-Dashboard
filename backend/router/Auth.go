@@ -33,6 +33,7 @@ func register(c *gin.Context) {
 	}
 	if user.Username == "" || user.Password == "" || user.Email == "" {
 		_ = c.AbortWithError(InternalError, errors.New("username, password or email is empty"))
+		return
 	}
 	if project, err := controllers.Register(user); err != nil {
 		_ = c.AbortWithError(InternalError, err)

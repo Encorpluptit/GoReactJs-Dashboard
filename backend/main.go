@@ -36,7 +36,8 @@ func main() {
 	}
 
 	log.Printf("Server runs on http://%s:%s\n", strings.Join(addrs, ""), api.Port)
-	if err := api.Router.Run(); err != nil {
+	if err := api.Router.Run("0.0.0.0:" + api.Port); err != nil {
+		//if err := api.Router.Run(); err != nil {
 		log.Fatalln(err)
 	}
 }

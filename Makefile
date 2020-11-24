@@ -30,7 +30,7 @@ stop:
 	@docker-compose down
 
 clean:
-	@docker-compose down --remove-orphans --volumes --networks
+	@docker-compose down --remove-orphans --volumes
 
 
 restart: stop

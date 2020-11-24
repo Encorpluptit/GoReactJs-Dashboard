@@ -2,11 +2,13 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"time"
 )
 
 func about(c *gin.Context) {
+	log.Println(c)
 	c.JSON(http.StatusOK, dumpAboutJSON(c))
 }
 

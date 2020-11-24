@@ -6,16 +6,17 @@ services:
       context: backend
       dockerfile: Dockerfile
     environment:
-      PORT: 6666
+      PORT: 80
       GIN_MODE: debug
     ports:
-      - 8080:6666
+      - 8080:80
     restart: on-failure
     volumes:
       - api_dev:/api_dev
       - dashboard_db_dev:/database_dev
-
-  front:
+    networks:
+      - dashboard-network
+  front_dev:
     container_name: dashboard_front-dev
     build:
       context: front
@@ -30,21 +31,14 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     networks:
-      - fullstack
-
-#    depends_on:
-#      - fullstack-postgres
-#    networks:
-#      - fullstack
+      - dashboard-network
 
 volumes:
   api_dev:
   dashboard_db_dev:
   app_dev:
   app_dev_node_modules:
-#  database_postgres:
 
-# Networks to be created to facilitate communication between containers
 networks:
-  fullstack:
-#    driver: bridge
+  dashboard-network:
+    driver: bridge

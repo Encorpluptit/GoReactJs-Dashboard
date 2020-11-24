@@ -43,7 +43,23 @@ import {dark} from "@material-ui/core/styles/createPalette";
 // }
 
 
-const useStyles = makeStyles((theme) => ({
+const customerStyles = makeStyles((theme) => ({
+    root: {
+        maxWidth: 345,
+    },
+    expand: {
+        transform: 'rotate(0deg)',
+        marginLeft: 'auto',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+    },
+    expandOpen: {
+        transform: 'rotate(180deg)',
+    },
+}));
+
+const serviceStyles = makeStyles((theme) => ({
     root: {
         maxWidth: 345,
     },
@@ -60,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function RecipeReviewCard() {
-    const classes = useStyles(dark);
+    const classes = customerStyles(dark);
     const [expanded, setExpanded] = React.useState(false);
 
     const handleExpandClick = () => {
@@ -165,7 +181,7 @@ const Customer = ({ customer }) => {
 };
 
 class About extends Component {
-    headers = {
+    requestOptions = {
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
         // mode: 'cors', // no-cors, *cors, same-origin
         mode: 'cors', // no-cors, *cors, same-origin
@@ -196,23 +212,13 @@ class About extends Component {
     }
 
     componentDidMount() {
-        fetch(process.env.REACT_APP_API_URL + '/about.json', this.headers)
+        fetch(process.env.REACT_APP_API_URL + '/about.json', this.requestOptions)
             .then(response => response.json())
             .then((data) => {
                 this.setState({server_info: data})
                 console.warn(data)
             })
             .catch(console.log);
-        // fetch(process.env.REACT_APP_API_URL + '/about.json', this.headers)
-        //     .then(response => response.json())
-        //     .then(data => console.log(data))
-        //     .catch(console.log);
-        // fetch('http://jsonplaceholder.typicode.com/users')
-        //     .then(res => res.json())
-        //     .then((data) => {
-        //         this.setState({contacts: data})
-        //     })
-        //     .catch(console.log)
     }
 
     render() {

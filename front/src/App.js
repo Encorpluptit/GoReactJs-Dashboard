@@ -51,15 +51,15 @@ export default function App() {
           <Route path="/about.json">
             <About />
           </Route>
-          {/*<Route path="/dashboard">*/}
-          {/*  <ButtonAppBar />*/}
-          {/*</Route>*/}
-          {/*<Route path="/register">*/}
-          {/*  <Register />*/}
-          {/*</Route>*/}
-          {/*<Route path="/">*/}
-          {/*  <Login />*/}
-          {/*</Route>*/}
+          <Route path="/dashboard">
+            <ButtonAppBar />
+          </Route>
+          <Route path="/register">
+            <Register />
+          </Route>
+          <Route path="/">
+            <Login />
+          </Route>
         </Switch>
       </div>
     </Router>

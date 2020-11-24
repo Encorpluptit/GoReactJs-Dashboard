@@ -3,6 +3,7 @@ package router
 import (
 	"AppDev_DashBoard/controllers"
 	"AppDev_DashBoard/models"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -29,6 +30,9 @@ func register(c *gin.Context) {
 		Username: c.Query("Username"),
 		Password: c.Query("Password"),
 		Email:    c.Query("Email"),
+	}
+	if user.Username == "" || user.Password == "" || user.Email == "" {
+		_ = c.AbortWithError(InternalError, errors.New("username, password or email is empty"))
 	}
 	if project, err := controllers.Register(user); err != nil {
 		_ = c.AbortWithError(InternalError, err)

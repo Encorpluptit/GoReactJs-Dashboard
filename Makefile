@@ -31,6 +31,7 @@ stop:
 
 clean:
 	@docker-compose down --remove-orphans --volumes
+	@docker-compose -f docker-compose.dev.yml down --remove-orphans --volumes
 
 
 restart: stop

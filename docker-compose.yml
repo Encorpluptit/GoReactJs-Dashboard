@@ -8,6 +8,7 @@ services:
     environment:
       PORT: 6666
       GIN_MODE: release
+#      FRONT_URL: http://localhost:3000
     ports:
       - 8080:6666
     restart: on-failure

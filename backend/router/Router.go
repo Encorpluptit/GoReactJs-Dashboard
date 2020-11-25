@@ -1,12 +1,14 @@
 package router
 
 import (
+	"AppDev_DashBoard/middlewares"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 const (
-	rAuth = "auth"
+	rAuth   = "auth"
+	rGithub = "github"
 	//rModule       = "module"
 	//RProject      = "project"
 	//rFunction     = "function"
@@ -15,20 +17,23 @@ const (
 	InternalError = http.StatusForbidden
 )
 
-func ApplyRoutes(r *gin.Engine) {
+func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 	r.GET("/health", func(c *gin.Context) {
 		c.Status(http.StatusOK)
 	})
 	r.GET("/about.json", about)
+	r.Use(store)
 	auth := r.Group("/" + rAuth)
 	{
 		auth.POST("/login", login)
 		auth.POST("/register", register)
-
-		//projects.GET("/get/:"+RProject, findProjectByName)
-		//projects.POST("/add", addProject)
-		//projects.PATCH("/update", updateProject)
-		//projects.DELETE("/delete", deleteProject)
+		auth.GET("/github", githubAuth)
+		auth.GET("/github/success", githubAuthSuccess)
 	}
-
+	auth.Use(store)
+	githubWidgets := r.Group("/" + rGithub)
+	{
+		githubWidgets.GET("/repo", GithubRepo)
+	}
+	githubWidgets.Use(middlewares.GHMiddleware())
 }

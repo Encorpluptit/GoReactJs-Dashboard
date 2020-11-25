@@ -74,6 +74,7 @@ export default function SignUp() {
   const redirectSuccess = useCallback(() => history.push('/dashboard'), [history]);
   const submitForm = () => handleSubmit(username, email, password1, password2, redirectSuccess);
   const handleOnClick = useCallback(() => history.push('/'), [history]);
+  const redirectGithub = useCallback(() => history.push(process.env.REACT_APP_API_URL + '/auth/github'), [history]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -157,6 +158,17 @@ export default function SignUp() {
             className={classes.submit}
           >
             Back
+          </MyButton>
+          <MyButton
+            // type="submit"
+            fullWidth
+            variant="contained"
+            color="blue"
+            // onClick={redirectGithub}
+            href={process.env.REACT_APP_API_URL + '/auth/github'}
+            className={classes.submit}
+          >
+            GITHUB
           </MyButton>
         </form>
       </div>

@@ -22,4 +22,5 @@ widgets:
         - Calendar
         - Gmail
         - 
+rapid API
     

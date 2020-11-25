@@ -65,7 +65,7 @@ func githubAuth(ctx *gin.Context) {
 	//url := conf.AuthCodeURL("state", oauth2.AccessTypeOffline)
 	url := controllers.GithubConf.AuthCodeURL("state", oauth2.AccessTypeOnline)
 	fmt.Printf("Visit the URL for the auth dialog: %v\n", url)
-	ctx.Redirect(http.StatusMovedPermanently, url)
+	ctx.Redirect(http.StatusTemporaryRedirect, url)
 
 	// Use the authorization code that is pushed to the redirect
 	// URL. Exchange will do the handshake to retrieve the
@@ -102,18 +102,20 @@ func githubAuthSuccess(c *gin.Context) {
 	// githubConf.Client will refresh the token as necessary.
 	code := c.Query("code")
 	if code == "" {
-		log.Fatal("NO CODE IN QUERY")
+		log.Println("NO CODE IN QUERY From Url by Github")
+		c.Redirect(http.StatusMovedPermanently, os.Getenv("FRONT_URL"))
+		return
 	}
 	log.Printf("In %s: code -> %s", c.HandlerName(), code)
 
 	session := sessions.Default(c)
 	session.Set("GithubToken", code)
 	session.Save()
-	frontUrl := os.Getenv("FRONT_URL")
-	if frontUrl == "" {
-		log.Fatal("FrontUrl")
-	}
-	log.Printf("In %s: frontUrl -> %s", c.HandlerName(), frontUrl+"/dashboard")
-	//c.Next()
-	c.Redirect(http.StatusMovedPermanently, frontUrl+"/dashboard")
+	//frontUrl := os.Getenv("FRONT_URL")
+	//if frontUrl == "" {
+	//	log.Fatal("FrontUrl")
+	//}
+	//log.Printf("In %s: frontUrl -> %s", c.HandlerName(), frontUrl+"/dashboard")
+	////c.Next()
+	//c.Redirect(http.StatusMovedPermanently, frontUrl+"/dashboard")
 }

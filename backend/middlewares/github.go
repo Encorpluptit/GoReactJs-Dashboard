@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"os"
 )
 
 func getGHToken(c *gin.Context) {
@@ -28,16 +29,25 @@ func checkGHToken(c *gin.Context) bool {
 	return true
 }
 
+func GHLoginMiddelware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		log.Println("IN Github Login Middleware")
+		c.Next()
+		c.Redirect(http.StatusMovedPermanently, os.Getenv("FRONT_URL")+"/dashboard")
+		//getGHToken(c)
+	}
+}
+
 func GHMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// TODO: Check githubToken in session here.
 		// TODO: Add callback ?
-		log.Println("IN Github MIDDLEWARE")
+		log.Println("IN Github Middleware")
 		if !checkGHToken(c) {
 			c.Redirect(http.StatusTemporaryRedirect, "/auth/github")
-			return
+			//return
 		}
-		getGHToken(c)
+		//getGHToken(c)
 		c.Next()
 	}
 	return func(c *gin.Context) {

@@ -27,7 +27,7 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 	{
 		auth.POST("/login", login)
 		auth.POST("/register", register)
-		auth.GET("/github", githubAuth)
+		auth.Use(middlewares.GHLoginMiddelware()).GET("/github", githubAuth)
 		auth.GET("/github/success", githubAuthSuccess)
 	}
 	auth.Use(store)

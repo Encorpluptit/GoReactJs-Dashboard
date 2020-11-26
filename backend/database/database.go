@@ -29,7 +29,7 @@ var BackendDB = &Database{}
 func Init() (db *Database, err error) {
 	BackendDB.prepareEnv()
 	if os.Getenv("GIN_MODE") == "release" {
-		BackendDB.DB, err = gorm.Open(sqlite.Open("prod.db"), &gorm.Config{})
+		//BackendDB.DB, err = gorm.Open(sqlite.Open("prod.db"), &gorm.Config{})
 		err = BackendDB.initPostGreSql()
 	} else {
 		log.Print("Database in Debug mode")
@@ -78,7 +78,8 @@ func (db *Database) initMySql() (err error) {
 
 // Initialise Postgresql Db
 func (db *Database) initPostGreSql() (err error) {
-	url := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", db.Host, db.Port, db.User, db.Name, db.Password)
+	//url := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", db.Host, db.Port, db.User, db.Name, db.Password)
+	url := os.Getenv("DATABASE_URL")
 	db.DB, err = gorm.Open(postgres.Open(url), &gorm.Config{})
 	if err != nil {
 		fmt.Printf("Cannot connect to %s database", db.Driver)

@@ -51,5 +51,6 @@ func GithubRepo(c *gin.Context) {
 	//}
 	//c.JSON(http.StatusOK, bodyBytes)
 	c.DataFromReader(http.StatusOK,
-		resp.ContentLength, gin.MIMEJSON, resp.Body, nil)
+		resp.ContentLength, gin.MIMEJSON,
+		resp.Body, nil)
 }

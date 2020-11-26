@@ -3,11 +3,13 @@ package router
 import (
 	"AppDev_DashBoard/controllers"
 	"AppDev_DashBoard/models"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -66,6 +68,31 @@ func githubAuthSuccess(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("GithubToken", code)
 	session.Save()
+	tok, err := controllers.GetGithubConf().Exchange(c, fmt.Sprintf("%v", code))
+	if err != nil {
+		log.Fatal(err)
+	}
+	client := controllers.GetGithubConf().Client(c, tok)
+	resp, err := client.Get("https://api.github.com/user")
+	if err != nil {
+		log.Fatal(err)
+	}
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var dat map[string]interface{}
+	if err := json.Unmarshal(bodyBytes, &dat); err != nil {
+		log.Fatal(err)
+	}
+	fId, ok := dat["id"].(float64)
+	if !ok {
+		log.Fatalf("got data of type %T but wanted int\n", dat["id"])
+	}
+	log.Println(int(fId))
+	//myInt := dat["id"].(int)
+
+	//TODO: check for User in User OAuth DB
 }
 
 func googleAuth(ctx *gin.Context) {

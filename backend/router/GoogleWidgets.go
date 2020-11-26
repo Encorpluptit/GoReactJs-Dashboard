@@ -4,7 +4,6 @@ import (
 	"AppDev_DashBoard/controllers"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/oauth2"
 	"log"
 	"net/http"
 )
@@ -12,11 +11,11 @@ import (
 func GoogleRepo(c *gin.Context) {
 	// TODO: CHANGE THAT
 	// Handle the exchange code to initiate a transport.
-	tok, err := controllers.GetGoogleConf().Exchange(oauth2.NoContext, "authorization-code")
+	tok, err := controllers.GetGoogleConf().Exchange(c, "authorization-code")
 	if err != nil {
 		log.Fatal(err)
 	}
-	client := controllers.GetGoogleConf().Client(oauth2.NoContext, tok)
+	client := controllers.GetGoogleConf().Client(c, tok)
 	//
 	log.Printf("In %s: code\n", c.HandlerName())
 	session := sessions.Default(c)

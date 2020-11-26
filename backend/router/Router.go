@@ -9,6 +9,7 @@ import (
 const (
 	rAuth   = "auth"
 	rGithub = "github"
+	rGoogle = "google"
 	//rModule       = "module"
 	//RProject      = "project"
 	//rFunction     = "function"
@@ -27,13 +28,20 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 	{
 		auth.POST("/login", login)
 		auth.POST("/register", register)
-		auth.Use(middlewares.GHLoginMiddelware()).GET("/github", githubAuth)
-		auth.GET("/github/success", githubAuthSuccess)
+		auth.GET("/github", middlewares.GHLoginMiddleware(), githubAuth)
+		auth.GET("/github/success", githubAuthSuccess, middlewares.RedirectDashBoard())
+		auth.GET("/google", middlewares.GoogleLoginMiddelware(), googleAuth)
+		auth.GET("/google/success", googleAuthSuccess, middlewares.RedirectDashBoard())
 	}
-	auth.Use(store)
-	githubWidgets := r.Group("/" + rGithub)
+	githubWidgets := r.Group("/" + rGithub).Use(middlewares.GHMiddleware())
 	{
 		githubWidgets.GET("/repo", GithubRepo)
 	}
-	githubWidgets.Use(middlewares.GHMiddleware())
+	googleWidgets := r.Group("/" + rGoogle).Use(middlewares.GoogleMiddleware())
+	{
+		googleWidgets.GET("/repo", GoogleRepo)
+	}
+	//githubWidgets.Use()
+	//auth.Use(store)
+	//githubWidgets.Use(store)
 }

@@ -170,6 +170,17 @@ export default function SignUp() {
           >
             GITHUB
           </MyButton>
+          <MyButton
+            // type="submit"
+            fullWidth
+            variant="contained"
+            color="blue"
+            // onClick={redirectGithub}
+            href={process.env.REACT_APP_API_URL + '/auth/google'}
+            className={classes.submit}
+          >
+            Google
+          </MyButton>
         </form>
       </div>
       <Box mt={5}>

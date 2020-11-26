@@ -1,5 +1,17 @@
 package middlewares
 
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"os"
+)
+
+func RedirectDashBoard() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FRONT_URL")+"/dashboard")
+	}
+}
+
 //func NoCheck(next http.HandlerFunc) http.HandlerFunc {
 //	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 //		next.ServeHTTP(w, r)

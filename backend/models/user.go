@@ -9,8 +9,13 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"size:255;not null;unique" json:"nickname"`
-	Email    string `gorm:"size:100;not null;unique" json:"email"`
+	Username    string `gorm:"size:255;not null;unique" json:"nickname"`
+	Email       string `gorm:"size:100;not null;unique" json:"email"`
+	GithubId    int    `gorm:"size:100" json:"github_id"`
+	GoogleEmail string `gorm:"size:100" json:"google_email"`
+	//TODO: manage Unique ?
+	//GithubId    int    `gorm:"size:100;unique" json:"github_id"`
+	//GoogleEmail string `gorm:"size:100;unique" json:"google_email"`
 	Password string `gorm:"size:100;not null;" json:"password"`
 }
 
@@ -111,6 +116,22 @@ func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 		return &User{}, err
 	}
 	return u, err
+}
+
+func (u *User) FindUserByGithubID(db *gorm.DB) (*User, error) {
+	if err := db.Debug().Model(User{}).Where("github_id = ?", u.GithubId).Take(&u).Error; err != nil {
+		return u, err
+	}
+	return u, nil
+}
+
+func (u *User) FindUserByGoogleEmail(db *gorm.DB) (*User, error) {
+	//user := &User{}
+	//err := db.Debug().Model(&User{}).First(user, "username = ?", u.Username).Error
+	if err := db.Debug().Model(User{}).Where("google_email = ?", u.GoogleEmail).Take(&u).Error; err != nil {
+		return u, err
+	}
+	return u, nil
 }
 
 func (u User) FindUserByUsername(db *gorm.DB) (*User, error) {

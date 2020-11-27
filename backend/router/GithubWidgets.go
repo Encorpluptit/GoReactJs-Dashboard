@@ -33,7 +33,9 @@ func GithubRepo(c *gin.Context) {
 	}
 	req.Header.Set("Accept", "application/vnd.github.v3+json")
 	resp, err := client.Do(req)
+
 	//resp, err := client.Get(url)
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,6 +43,7 @@ func GithubRepo(c *gin.Context) {
 		c.Status(resp.StatusCode)
 		return
 	}
+
 	//bodyBytes, err := ioutil.ReadAll(resp.Body)
 	//if err != nil {
 	//	log.Fatal(err)
@@ -50,7 +53,9 @@ func GithubRepo(c *gin.Context) {
 	//	panic(err)
 	//}
 	//c.JSON(http.StatusOK, bodyBytes)
+
 	c.DataFromReader(http.StatusOK,
 		resp.ContentLength, gin.MIMEJSON,
 		resp.Body, nil)
+
 }

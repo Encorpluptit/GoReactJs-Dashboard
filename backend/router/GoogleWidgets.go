@@ -2,6 +2,7 @@ package router
 
 import (
 	"AppDev_DashBoard/controllers"
+	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -11,21 +12,44 @@ import (
 func GoogleRepo(c *gin.Context) {
 	// TODO: CHANGE THAT
 	// Handle the exchange code to initiate a transport.
-	tok, err := controllers.GetGoogleConf().Exchange(c, "authorization-code")
+	log.Printf("In %s: code\n", c.HandlerName())
+	session := sessions.Default(c)
+	code := session.Get("GoogleToken")
+	log.Printf("In %s: code -> %v : %T\n", c.HandlerName(), code, code)
+	tok, err := controllers.GetGoogleConf().Exchange(c, fmt.Sprintf("%v", code))
 	if err != nil {
 		log.Fatal(err)
 	}
 	client := controllers.GetGoogleConf().Client(c, tok)
 	//
-	log.Printf("In %s: code\n", c.HandlerName())
-	session := sessions.Default(c)
-	code := session.Get("GithubToken")
-	log.Printf("In %s: code -> %v : %T\n", c.HandlerName(), code, code)
-	resp, err := client.Get("https://api.github.com/users/encorpluptit/repos")
+	//resp, err := client.Get("https://www.googleapis.com/auth/userinfo.email")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//log.Println(resp)
+
+	url := "https://www.googleapis.com/auth/userinfo.email"
+	log.Printf("Request to -> %s\n", url)
+
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(resp)
+	req.Header.Set("Accept", "application/vnd.github.v3+json")
+	resp, err := client.Do(req)
+
+	//resp, err := client.Get(url)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		c.Status(resp.StatusCode)
+		return
+	}
+	c.DataFromReader(http.StatusOK,
+		resp.ContentLength, gin.MIMEJSON,
+		resp.Body, nil)
 
 	// Use the authorization code that is pushed to the redirect
 	// URL. Exchange will do the handshake to retrieve the
@@ -56,7 +80,7 @@ func GoogleRepo(c *gin.Context) {
 	//	panic(err)
 	//}
 	//log.Printf("%v\n", dat)
-	c.Status(http.StatusOK)
+	//c.Status(http.StatusOK)
 	//c.DataFromReader(resp.ContentLength, "application/json", )
 	//c.JSON()
 }

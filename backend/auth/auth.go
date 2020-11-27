@@ -3,14 +3,13 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/dgrijalva/jwt-go"
 )
 
 type Token struct {

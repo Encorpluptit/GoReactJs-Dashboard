@@ -3,13 +3,11 @@ package router
 import (
 	"AppDev_DashBoard/controllers"
 	"AppDev_DashBoard/models"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -52,11 +50,12 @@ func githubAuth(ctx *gin.Context) {
 	// Redirect user to consent page to ask for permission
 	// for the scopes specified above.
 	url := controllers.GetGithubConf().AuthCodeURL("state", oauth2.AccessTypeOnline)
-	fmt.Printf("Visit the URL for the auth dialog: %v\n", url)
+	//fmt.Printf("Visit the URL for the auth dialog: %v\n", url)
 	ctx.Redirect(http.StatusTemporaryRedirect, url)
 }
 
 func githubAuthSuccess(c *gin.Context) {
+	// TODO: Maybe to put in GithubOAuthSuccess middleware
 	code := c.Query("code")
 	if code == "" {
 		log.Println("NO CODE IN QUERY From Url by Github")
@@ -66,33 +65,11 @@ func githubAuthSuccess(c *gin.Context) {
 	log.Printf("In %s: code -> %s", c.HandlerName(), code)
 
 	session := sessions.Default(c)
-	session.Set("GithubToken", code)
-	session.Save()
-	tok, err := controllers.GetGithubConf().Exchange(c, fmt.Sprintf("%v", code))
-	if err != nil {
-		log.Fatal(err)
+	session.Set(controllers.GithubCodeKey, code)
+	if err := session.Save(); err != nil {
+		log.Fatal("In githubAuthSuccess, failed on session save ->", err)
 	}
-	client := controllers.GetGithubConf().Client(c, tok)
-	resp, err := client.Get("https://api.github.com/user")
-	if err != nil {
-		log.Fatal(err)
-	}
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	var dat map[string]interface{}
-	if err := json.Unmarshal(bodyBytes, &dat); err != nil {
-		log.Fatal(err)
-	}
-	fId, ok := dat["id"].(float64)
-	if !ok {
-		log.Fatalf("got data of type %T but wanted int\n", dat["id"])
-	}
-	log.Println(int(fId))
-	//myInt := dat["id"].(int)
-
-	//TODO: check for User in User OAuth DB
+	log.Printf("In %s: code -> %v : %T\n", c.HandlerName(), code, code)
 }
 
 func googleAuth(ctx *gin.Context) {
@@ -105,14 +82,22 @@ func googleAuth(ctx *gin.Context) {
 }
 
 func googleAuthSuccess(c *gin.Context) {
+	// TODO: Maybe to put in GoogleOAuthSuccess middleware
 	code := c.Query("code")
 	if code == "" {
 		log.Println("NO CODE IN QUERY From Url by Google")
 		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FRONT_URL"))
 		return
 	}
-	log.Printf("In %s: code -> %s", c.HandlerName(), code)
 	session := sessions.Default(c)
-	session.Set("GoogleToken", code)
-	session.Save()
+	session.Set(controllers.GoogleCodeKey, code)
+	if err := session.Save(); err != nil {
+		log.Fatal("In googleAuthSuccess, failed on session save ->", err)
+	}
+	log.Printf("In %s: code -> %v : %T\n", c.HandlerName(), code, code)
+	//email, err := controllers.GetGoogleUserEmail(c, code)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//log.Println(email)
 }

@@ -28,12 +28,14 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 	{
 		auth.POST("/login", login)
 		auth.POST("/register", register)
-		auth.GET("/github", middlewares.GHLoginMiddleware(), githubAuth)
-		auth.GET("/github/success", githubAuthSuccess, middlewares.RedirectDashBoard())
-		auth.GET("/google", middlewares.GoogleLoginMiddelware(), googleAuth)
-		auth.GET("/google/success", googleAuthSuccess, middlewares.RedirectDashBoard())
+		auth.GET(middlewares.GithubAuthLoginUrl, githubAuth)
+		auth.GET(middlewares.GithubAuthRegisterUrl, githubAuth)
+		auth.GET("/github/success", githubAuthSuccess, middlewares.GithubOAuthSuccess())
+		auth.GET(middlewares.GoogleAuthLoginUrl, googleAuth)
+		auth.GET(middlewares.GoogleAuthRegisterUrl, googleAuth)
+		auth.GET("/google/success", googleAuthSuccess, middlewares.GoogleOAuthSuccess())
 	}
-	githubWidgets := r.Group("/" + rGithub).Use(middlewares.GHMiddleware())
+	githubWidgets := r.Group("/" + rGithub).Use(middlewares.GithubMiddleware())
 	{
 		githubWidgets.GET("/repo", GithubRepo)
 	}

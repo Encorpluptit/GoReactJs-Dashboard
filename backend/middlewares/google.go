@@ -1,11 +1,17 @@
 package middlewares
 
 import (
+	"AppDev_DashBoard/controllers"
+	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
-	"os"
+)
+
+const (
+	GoogleAuthLoginUrl    = "/login/google"
+	GoogleAuthRegisterUrl = "/register/google"
 )
 
 func checkGoogleToken(c *gin.Context) bool {
@@ -19,13 +25,56 @@ func checkGoogleToken(c *gin.Context) bool {
 	return true
 }
 
-func GoogleLoginMiddelware() gin.HandlerFunc {
+//
+//func GoogleLoginMiddleware() gin.HandlerFunc {
+//	return func(c *gin.Context) {
+//		log.Println("IN Google Login Middleware")
+//		session := sessions.Default(c)
+//		session.Set(AuthMethod, LoginAuthMethod)
+//		if err := session.Save(); err != nil {
+//			log.Fatal("In GoogleLoginMiddleware, failed on session save ->", err)
+//		}
+//		c.Next()
+//	}
+//}
+//
+//func GoogleRegisterMiddleware() gin.HandlerFunc {
+//	return func(c *gin.Context) {
+//		log.Println("IN Google Register Middleware")
+//		session := sessions.Default(c)
+//		session.Set(AuthMethod, RegisterAuthMethod)
+//		if err := session.Save(); err != nil {
+//			log.Fatal("In GoogleRegisterMiddleware, failed on session save ->", err)
+//		}
+//		c.Next()
+//		session.Set(AuthMethod, RegisterAuthMethod)
+//		if err := session.Save(); err != nil {
+//			log.Fatal("In GoogleRegisterMiddleware, failed on session save ->", err)
+//		}
+//		key := session.Get(AuthMethod)
+//		log.Println("Key:", key)
+//	}
+//}
+
+func GoogleOAuthSuccess() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		log.Println("IN Google Login Middleware")
-		c.Next()
-		log.Println("AFTER Google Login Middleware BEFORE REDIRECT")
-		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FRONT_URL")+"/dashboard")
-		//getGHToken(c)
+		session := sessions.Default(c)
+		code := session.Get(controllers.GoogleCodeKey)
+		log.Printf("Code: %v", code)
+		email, err := controllers.GetGoogleUserEmail(c, fmt.Sprintf("%v", code))
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Email:", email)
+		if user, err := controllers.FindGoogleUser(email); err != nil {
+			log.Println(err)
+			if user, err = controllers.RegisterGoogleUser(user); err != nil {
+				log.Println(err)
+			}
+		} else {
+			user, err = controllers.LoginGoogleUser(user)
+		}
+		RedirectDashBoard()(c)
 	}
 }
 
@@ -35,30 +84,9 @@ func GoogleMiddleware() gin.HandlerFunc {
 		// TODO: Add callback ?
 		log.Println("IN Google Middleware")
 		if !checkGoogleToken(c) {
-			c.Redirect(http.StatusTemporaryRedirect, "/auth/google")
-			//return
+			c.Redirect(http.StatusTemporaryRedirect, "/auth"+GoogleAuthLoginUrl)
+			return
 		}
-		//getGHToken(c)
 		c.Next()
-	}
-	return func(c *gin.Context) {
-		// TODO: Check githubToken in session here.
-		// TODO: Add callback ?
-		//t := time.Now()
-		//
-		//// Set example variable
-		//c.Set("example", "12345")
-		//
-		//// before request
-		//
-		//c.Next()
-		//
-		//// after request
-		//latency := time.Since(t)
-		//log.Print(latency)
-		//
-		//// access the status we are sending
-		//status := c.Writer.Status()
-		//log.Println(status)
 	}
 }

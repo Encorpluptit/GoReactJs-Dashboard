@@ -4,7 +4,6 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -12,15 +11,13 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
 import GridDashboard from './gridLayout.js';
 import './dashboard.css';
+import WidgetGithub from './SettingsWidget/settingsGithub.js';
+import WidgetGmail from './SettingsWidget/settingsGmail.js';
+import WidgetWeather from './SettingsWidget/settingsWeather.js';
 
 const drawerWidth = 240;
 
@@ -117,7 +114,6 @@ export default function MiniDrawer() {
           <Typography variant="h6" noWrap>
             Dashboard
           </Typography>
-          
         </Toolbar>
       </AppBar>
       <Drawer
@@ -138,17 +134,10 @@ export default function MiniDrawer() {
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </div>
-        <Divider />
-        <Divider />
-        <List>
-          {['Weather', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Button color="inherit" onClick={handleOnClick}>Logout</Button>
+        <WidgetWeather class="center-div"></WidgetWeather>
+        <WidgetGmail></WidgetGmail>
+        <WidgetGithub></WidgetGithub>
+        <Button variant="contained" color="primary" onClick={handleOnClick}>Logout</Button>
       </Drawer>
       <main className={classes.content}>
         <GridDashboard/>

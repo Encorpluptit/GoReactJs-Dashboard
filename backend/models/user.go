@@ -9,16 +9,17 @@ import (
 
 type User struct {
 	gorm.Model
-	//Username    string `gorm:"size:255;not null;unique" json:"nickname"`
-	//Email       string `gorm:"size:100;not null;unique" json:"email"`
 	Username    string `gorm:"size:255;not null" json:"nickname"`
 	Email       string `gorm:"size:100;not null" json:"email"`
-	GithubId    int    `gorm:"size:100" json:"github_id"`
+	GithubId    int    `json:"github_id"`
 	GoogleEmail string `gorm:"size:100" json:"google_email"`
 	//TODO: manage Unique ?
+	//Username    string `gorm:"size:255;not null;unique" json:"nickname"`
+	//Email       string `gorm:"size:100;not null;unique" json:"email"`
 	//GithubId    int    `gorm:"size:100;unique" json:"github_id"`
 	//GoogleEmail string `gorm:"size:100;unique" json:"google_email"`
-	Password string `gorm:"size:100;not null;" json:"password"`
+	Password     string        `gorm:"size:100;not null;" json:"password"`
+	CovidWidgets []CovidWidget `json:"covid_widgets"`
 }
 
 func Hash(password string) ([]byte, error) {
@@ -38,60 +39,6 @@ func (u *User) BeforeSave(*gorm.DB) error {
 	return nil
 }
 
-//func (u *User) Prepare() {
-//	u.ID = 0
-//	u.Username = html.EscapeString(strings.TrimSpace(u.Username))
-//	u.Email = html.EscapeString(strings.TrimSpace(u.Email))
-//	u.CreatedAt = time.Now()
-//	u.UpdatedAt = time.Now()
-//}
-
-//func (u *User) Validate(action string) error {
-//	switch strings.ToLower(action) {
-//	case "update":
-//		if u.Username == "" {
-//			return errors.New("required nickname")
-//		}
-//		if u.Password == "" {
-//			return errors.New("required password")
-//		}
-//		if u.Email == "" {
-//			return errors.New("required email")
-//		}
-//		if err := checkmail.ValidateFormat(u.Email); err != nil {
-//			return errors.New("invalid email")
-//		}
-//
-//		return nil
-//	case "login":
-//		if u.Password == "" {
-//			return errors.New("required password")
-//		}
-//		if u.Email == "" {
-//			return errors.New("required email")
-//		}
-//		if err := checkmail.ValidateFormat(u.Email); err != nil {
-//			return errors.New("invalid email")
-//		}
-//		return nil
-//
-//	default:
-//		if u.Username == "" {
-//			return errors.New("required nickname")
-//		}
-//		if u.Password == "" {
-//			return errors.New("required password")
-//		}
-//		if u.Email == "" {
-//			return errors.New("required email")
-//		}
-//		if err := checkmail.ValidateFormat(u.Email); err != nil {
-//			return errors.New("invalid email")
-//		}
-//		return nil
-//	}
-//}
-//
 func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 	var err error
 	err = db.Debug().Create(&u).Error
@@ -111,7 +58,7 @@ func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 	return &users, err
 }
 
-func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
+func (u *User) FindUserByID(db *gorm.DB, uid uint) (*User, error) {
 	var err error
 	err = db.Debug().Model(User{}).Where("id = ?", uid).Take(&u).Error
 	if err != nil {

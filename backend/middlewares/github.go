@@ -56,6 +56,7 @@ func GithubMiddleware() gin.HandlerFunc {
 		// TODO: Add callback ?
 		log.Println("IN Github Middleware")
 		if !checkGHToken(c) {
+			//_ = c.AbortWithError(http.StatusUnauthorized, errors.New("unauthorized"))
 			c.Redirect(http.StatusTemporaryRedirect, "/auth"+GithubAuthLoginUrl)
 			return
 		}

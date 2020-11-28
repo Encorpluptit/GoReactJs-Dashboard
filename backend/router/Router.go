@@ -7,14 +7,11 @@ import (
 )
 
 const (
-	rAuth   = "auth"
-	rGithub = "github"
-	rGoogle = "google"
-	//rModule       = "module"
-	//RProject      = "project"
-	//rFunction     = "function"
-	//rType         = "type"
-	//rName         = "name"
+	rAuth         = "auth"
+	rGithub       = "github"
+	rGoogle       = "google"
+	rWidget       = "widget"
+	rCovid        = "covid"
 	InternalError = http.StatusForbidden
 )
 
@@ -35,7 +32,14 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 		auth.GET(middlewares.GoogleAuthRegisterUrl, googleAuth)
 		auth.GET("/google/success", googleAuthSuccess, middlewares.GoogleOAuthSuccess())
 	}
-	r.GET("/widgets", widgets)
+	widgets := r.Group("/"+rWidget, middlewares.SetMiddlewareAuthentication())
+	{
+		covid := widgets.Group("/" + rCovid)
+		{
+			covid.GET("/get", getCovidWidget)
+			covid.POST("/create", getCovidWidget)
+		}
+	}
 	githubWidgets := r.Group("/" + rGithub).Use(middlewares.GithubMiddleware())
 	{
 		githubWidgets.GET("/repo", GithubRepo)
@@ -44,7 +48,8 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 	{
 		googleWidgets.GET("/repo", GoogleRepo)
 	}
-	r.GET("/covid", covid)
+	r.GET("/test", testWidget)
+
 	//githubWidgets.Use()
 	//auth.Use(store)
 	//githubWidgets.Use(store)

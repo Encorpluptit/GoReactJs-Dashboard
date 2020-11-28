@@ -4,7 +4,6 @@ import (
 	"AppDev_DashBoard/api_errors"
 	"AppDev_DashBoard/database"
 	"AppDev_DashBoard/models"
-	"gorm.io/gorm"
 	"log"
 )
 
@@ -38,16 +37,6 @@ func RegisterGithubUser(requestedUser *models.User) (user *models.User, err erro
 }
 
 //TODO: DO
-func LoginGithubUser(requestedUser *models.User) (user *models.User, err error) {
-	log.Printf("Login Github User: %v\n", requestedUser)
-	user, err = requestedUser.SaveUser(database.BackendDB.DB)
-	if err != nil {
-		return nil, err
-	}
-	return requestedUser, nil
-}
-
-//TODO: DO
 func RegisterGoogleUser(requestedUser *models.User) (user *models.User, err error) {
 	log.Printf("Register Google User: %v\n", requestedUser)
 	user, err = requestedUser.SaveUser(database.BackendDB.DB)
@@ -57,22 +46,9 @@ func RegisterGoogleUser(requestedUser *models.User) (user *models.User, err erro
 	return user, nil
 }
 
-//TODO: DO
-func LoginGoogleUser(requestedUser *models.User) (user *models.User, err error) {
-	log.Printf("Login Google User: %#v\n", requestedUser)
-	//user, err = requestedUser.SaveUser(database.BackendDB.DB)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//return user, nil
-	return requestedUser, nil
-}
-
 func FindUser(id uint) (user *models.User, err error) {
-	user = &models.User{
-		Model: gorm.Model{ID: id},
-	}
-	if user, err = user.FindUserByGithubID(database.BackendDB.DB); err != nil {
+	user = &models.User{}
+	if user, err = user.FindUserByID(database.BackendDB.DB, id); err != nil {
 		log.Println("User Not found with github ID in controllers.FindUserByGithubID", err)
 	}
 	return user, err

@@ -1,13 +1,27 @@
 package router
 
 import (
-	"AppDev_DashBoard/auth"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
+	"net/url"
 )
 
-func widgets(c *gin.Context) {
-	log.Println("Token: ", auth.ExtractToken(c.Request))
-	id, _ := auth.ExtractTokenID(c.Request)
-	log.Println("ID: ", id)
+func testWidget(c *gin.Context) {
+	u, _ := url.Parse(CovidCountryEndpoint)
+	log.Println("url:", u)
+	values, _ := url.ParseQuery(u.RawQuery)
+	values.Set("name", "italy")
+	values.Set("format", "json")
+	u.RawQuery = values.Encode()
+	fmt.Println("new url:", u)
+	res := doCovidReq(fmt.Sprintf("%v", u))
+	c.DataFromReader(
+		http.StatusOK,
+		res.ContentLength, gin.MIMEJSON,
+		res.Body, nil)
+	//log.Println("Token: ", auth.ExtractToken(c.Request))
+	//id, _ := auth.ExtractTokenID(c.Request)
+	//log.Println("ID: ", id)
 }

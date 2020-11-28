@@ -1,6 +1,7 @@
 package router
 
 import (
+	"AppDev_DashBoard/auth"
 	"AppDev_DashBoard/controllers"
 	"AppDev_DashBoard/models"
 	"errors"
@@ -11,6 +12,8 @@ import (
 	"net/http"
 	"os"
 )
+
+const RapidAPIKey = "3756035059msh7fa332adcf87e69p13e21djsn7f3750733c19"
 
 // login: Log User with Queries Username and Password.
 // Abort when error occurs.
@@ -23,7 +26,9 @@ func login(c *gin.Context) {
 	if userFound, err := controllers.Login(user); err != nil {
 		_ = c.AbortWithError(InternalError, err)
 	} else {
-		c.JSON(http.StatusCreated, userFound)
+		tok, _ := auth.CreateToken(userFound.ID)
+		//c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FRONT_URL")+"/login/success?token="+tok)
+		c.JSON(http.StatusCreated, tok)
 	}
 }
 
@@ -93,4 +98,9 @@ func googleAuthSuccess(c *gin.Context) {
 		log.Fatal("In googleAuthSuccess, failed on session save ->", err)
 	}
 	log.Printf("In %s: code -> %v : %T\n", c.HandlerName(), code, code)
+}
+
+func addRapidApiHeaders(req *http.Request, host string) {
+	req.Header.Add("x-rapidapi-key", RapidAPIKey)
+	req.Header.Add("x-rapidapi-host", host)
 }

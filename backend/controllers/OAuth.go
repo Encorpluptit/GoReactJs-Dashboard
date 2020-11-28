@@ -36,14 +36,32 @@ func GetGithubConf() *oauth2.Config {
 		}
 	}
 	return GithubConf
+	//return &oauth2.Config{
+	//	// TODO: Vars in env
+	//	ClientID:     "a758719d422863f322f7",
+	//	ClientSecret: "a9a92ef0f4156ee312c41effd65589f36d5c4bca",
+	//	//Scopes:       []string{"SCOPE1", "SCOPE2"},
+	//	Scopes: []string{"user", "users"},
+	//	Endpoint: oauth2.Endpoint{
+	//		AuthURL:  "https://github.com/login/oauth/authorize",
+	//		TokenURL: "https://github.com/login/oauth/access_token",
+	//	},
+	//}
 }
 
+//TODO: Change this
+var githubClient *http.Client = nil
+
 func GetGithubClient(c *gin.Context, code string) *http.Client {
-	tok, err := GetGithubConf().Exchange(c, code)
-	if err != nil {
-		log.Fatal(err)
+	if githubClient == nil {
+		tok, err := GetGithubConf().Exchange(c, code)
+		if err != nil {
+			log.Fatal("In GetGithubConf().Exchange -> ", err)
+		}
+		githubClient = GetGithubConf().Client(c, tok)
+		return githubClient
 	}
-	return GetGithubConf().Client(c, tok)
+	return githubClient
 }
 
 func GetGithubUserID(c *gin.Context, code string) (int, error) {
@@ -95,7 +113,6 @@ func GetGoogleConf() *oauth2.Config {
 func GetGoogleClient(c *gin.Context, code string) *http.Client {
 	tok, err := GetGoogleConf().Exchange(c, code)
 	if err != nil {
-		log.Println("HERE TOK")
 		log.Fatal(err)
 	}
 	return GetGoogleConf().Client(c, tok)
@@ -105,7 +122,7 @@ func GetGoogleUserEmail(c *gin.Context, code string) (string, error) {
 	client := GetGoogleClient(c, code)
 	resp, err := client.Get(GoogleUserUrl)
 	if err != nil {
-		log.Println("CLIENT GET")
+		log.Println("Google Get User Error")
 		return "", err
 	}
 	bodyBytes, err := ioutil.ReadAll(resp.Body)

@@ -1,17 +1,19 @@
 package middlewares
 
 import (
+	"AppDev_DashBoard/auth"
 	"AppDev_DashBoard/controllers"
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"os"
 )
 
 const (
-	GoogleAuthLoginUrl    = "/login/google"
-	GoogleAuthRegisterUrl = "/register/google"
+	GoogleAuthLoginUrl    = "/google/login"
+	GoogleAuthRegisterUrl = "/google/register"
 )
 
 func checkGoogleToken(c *gin.Context) bool {
@@ -25,37 +27,6 @@ func checkGoogleToken(c *gin.Context) bool {
 	return true
 }
 
-//
-//func GoogleLoginMiddleware() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		log.Println("IN Google Login Middleware")
-//		session := sessions.Default(c)
-//		session.Set(AuthMethod, LoginAuthMethod)
-//		if err := session.Save(); err != nil {
-//			log.Fatal("In GoogleLoginMiddleware, failed on session save ->", err)
-//		}
-//		c.Next()
-//	}
-//}
-//
-//func GoogleRegisterMiddleware() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		log.Println("IN Google Register Middleware")
-//		session := sessions.Default(c)
-//		session.Set(AuthMethod, RegisterAuthMethod)
-//		if err := session.Save(); err != nil {
-//			log.Fatal("In GoogleRegisterMiddleware, failed on session save ->", err)
-//		}
-//		c.Next()
-//		session.Set(AuthMethod, RegisterAuthMethod)
-//		if err := session.Save(); err != nil {
-//			log.Fatal("In GoogleRegisterMiddleware, failed on session save ->", err)
-//		}
-//		key := session.Get(AuthMethod)
-//		log.Println("Key:", key)
-//	}
-//}
-
 func GoogleOAuthSuccess() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
@@ -66,15 +37,17 @@ func GoogleOAuthSuccess() gin.HandlerFunc {
 			log.Fatal(err)
 		}
 		log.Println("Email:", email)
-		if user, err := controllers.FindGoogleUser(email); err != nil {
+
+		user, err := controllers.FindGoogleUser(email)
+		if err != nil {
 			log.Println(err)
 			if user, err = controllers.RegisterGoogleUser(user); err != nil {
 				log.Println(err)
 			}
-		} else {
-			user, err = controllers.LoginGoogleUser(user)
 		}
-		RedirectDashBoard()(c)
+		tok, err := auth.CreateToken(user.ID)
+		//log.Println(tok)
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FRONT_URL")+"/login/success?token="+tok)
 	}
 }
 

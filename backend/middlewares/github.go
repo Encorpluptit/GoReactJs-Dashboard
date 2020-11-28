@@ -1,30 +1,20 @@
 package middlewares
 
 import (
+	"AppDev_DashBoard/auth"
 	"AppDev_DashBoard/controllers"
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"os"
 )
 
 const (
 	GithubAuthLoginUrl    = "/github/login"
 	GithubAuthRegisterUrl = "/github/register"
 )
-
-func getGHToken(c *gin.Context) {
-	code := c.Query("code")
-	if code == "" {
-		log.Fatal("NO CODE IN QUERY")
-	}
-	log.Printf("In %s: code -> %s", c.HandlerName(), code)
-
-	session := sessions.Default(c)
-	session.Set(controllers.GithubCodeKey, code)
-	session.Save()
-}
 
 func checkGHToken(c *gin.Context) bool {
 	session := sessions.Default(c)
@@ -37,48 +27,26 @@ func checkGHToken(c *gin.Context) bool {
 	return true
 }
 
-//
-//func GithubLoginMiddleware() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		session := sessions.Default(c)
-//		session.Set(AuthMethod, LoginAuthMethod)
-//		if err := session.Save(); err != nil {
-//			log.Fatal("In GithubLoginMiddleware, failed on session save ->", err)
-//		}
-//		c.Next()
-//	}
-//}
-//
-//func GithubRegisterMiddleware() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		session := sessions.Default(c)
-//		session.Set(AuthMethod, RegisterAuthMethod)
-//		if err := session.Save(); err != nil {
-//			log.Fatal("In GithubRegisterMiddleware, failed on session save ->", err)
-//		}
-//		c.Next()
-//	}
-//}
-
 func GithubOAuthSuccess() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 		code := session.Get(controllers.GithubCodeKey)
-		log.Printf("Code: %v", code)
+		log.Printf("Code Received after Github OAuth Sucess: %v", code)
 		id, err := controllers.GetGithubUserID(c, fmt.Sprintf("%v", code))
 		if err != nil {
 			log.Fatal(err)
 		}
 		log.Println("ID:", id)
-		if user, err := controllers.FindGithubUser(id); err != nil {
+		user, err := controllers.FindGithubUser(id)
+		if err != nil {
 			log.Println(err)
 			if user, err = controllers.RegisterGithubUser(user); err != nil {
 				log.Println(err)
 			}
-		} else {
-			user, err = controllers.LoginGithubUser(user)
 		}
-		RedirectDashBoard()(c)
+		tok, err := auth.CreateToken(user.ID)
+		log.Println(tok)
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FRONT_URL")+"/login/success?token="+tok)
 	}
 }
 

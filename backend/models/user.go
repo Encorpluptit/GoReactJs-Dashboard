@@ -9,8 +9,10 @@ import (
 
 type User struct {
 	gorm.Model
-	Username    string `gorm:"size:255;not null;unique" json:"nickname"`
-	Email       string `gorm:"size:100;not null;unique" json:"email"`
+	//Username    string `gorm:"size:255;not null;unique" json:"nickname"`
+	//Email       string `gorm:"size:100;not null;unique" json:"email"`
+	Username    string `gorm:"size:255;not null" json:"nickname"`
+	Email       string `gorm:"size:100;not null" json:"email"`
 	GithubId    int    `gorm:"size:100" json:"github_id"`
 	GoogleEmail string `gorm:"size:100" json:"google_email"`
 	//TODO: manage Unique ?

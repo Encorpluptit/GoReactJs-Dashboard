@@ -35,6 +35,7 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 		auth.GET(middlewares.GoogleAuthRegisterUrl, googleAuth)
 		auth.GET("/google/success", googleAuthSuccess, middlewares.GoogleOAuthSuccess())
 	}
+	r.GET("/widgets", widgets)
 	githubWidgets := r.Group("/" + rGithub).Use(middlewares.GithubMiddleware())
 	{
 		githubWidgets.GET("/repo", GithubRepo)
@@ -43,6 +44,7 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 	{
 		googleWidgets.GET("/repo", GoogleRepo)
 	}
+	r.GET("/covid", covid)
 	//githubWidgets.Use()
 	//auth.Use(store)
 	//githubWidgets.Use(store)

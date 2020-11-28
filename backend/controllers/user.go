@@ -4,6 +4,7 @@ import (
 	"AppDev_DashBoard/api_errors"
 	"AppDev_DashBoard/database"
 	"AppDev_DashBoard/models"
+	"gorm.io/gorm"
 	"log"
 )
 
@@ -43,7 +44,7 @@ func LoginGithubUser(requestedUser *models.User) (user *models.User, err error) 
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+	return requestedUser, nil
 }
 
 //TODO: DO
@@ -63,7 +64,18 @@ func LoginGoogleUser(requestedUser *models.User) (user *models.User, err error) 
 	//if err != nil {
 	//	return nil, err
 	//}
-	return user, nil
+	//return user, nil
+	return requestedUser, nil
+}
+
+func FindUser(id uint) (user *models.User, err error) {
+	user = &models.User{
+		Model: gorm.Model{ID: id},
+	}
+	if user, err = user.FindUserByGithubID(database.BackendDB.DB); err != nil {
+		log.Println("User Not found with github ID in controllers.FindUserByGithubID", err)
+	}
+	return user, err
 }
 
 func FindGithubUser(id int) (user *models.User, err error) {

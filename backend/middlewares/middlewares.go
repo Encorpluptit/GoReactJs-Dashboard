@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"AppDev_DashBoard/auth"
-	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
@@ -62,7 +61,8 @@ func SetMiddlewareAuthentication() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := auth.TokenValid(c.Request)
 		if err != nil {
-			_ = c.AbortWithError(http.StatusUnauthorized, errors.New("unauthorized"))
+			//_ = c.AbortWithError(http.StatusUnauthorized, errors.New("unauthorized"))
+			c.Redirect(http.StatusOK, os.Getenv("FRONT_URL")+"/login")
 			return
 		}
 	}

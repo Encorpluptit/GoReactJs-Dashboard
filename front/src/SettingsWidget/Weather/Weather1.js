@@ -8,6 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
+import Dashboard from '../../dashboard.js'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
 }));
+
 
 export default function Weather1() {
   const classes = useStyles();
@@ -65,7 +67,7 @@ export default function Weather1() {
           <Button onClick={handleClose} color="primary">
             Save
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={Dashboard.pushWidget1} color="primary">
             Close
           </Button>
         </DialogActions>

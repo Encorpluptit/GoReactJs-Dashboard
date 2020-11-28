@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Weather1 from './Weather/Weather1.js'
 import Weather2 from './Weather/Weather2.js'
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -34,7 +35,7 @@ export default function WidgetWeather() {
         </AccordionSummary>
         <AccordionDetails>
           <Weather1>Widget 1</Weather1>
-         <Weather2>Widget 2</Weather2>
+          <Weather2>Widget 2</Weather2>
         </AccordionDetails>
       </Accordion>
     </div>

@@ -11,6 +11,8 @@ import Container from '@material-ui/core/Container';
 import {useHistory} from 'react-router-dom';
 import './login.css';
 import UserAuth from "./Auth";
+import TestWidget from "./Testwidget";
+import CovidWidget from "./Testwidget";
 
 
 const MyButton = styled(({color, ...other}) => <Button {...other} />)({
@@ -78,6 +80,7 @@ export default function TestLogin() {
                 <Typography component="h1" variant="h5">
                     TestLogin
                 </Typography>
+                <CovidWidget/>
                 <MyButton
                     // type="submit"
                     fullWidth

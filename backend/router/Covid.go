@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	CovidRapidAPIHost       = "covid-19-data.p.rapidapi.com"
-	CovidCountryEndpoint    = "https://covidRoute-19-data.p.rapidapi.com/country"
-	CovidAllCountryEndpoint = "https://covid-19-data.p.rapidapi.com/country/all"
+	CovidRapidAPIHost       = "covid-19-coronavirus-statistics.p.rapidapi.com"
+	CovidCountryEndpoint    = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total"
+	CovidAllCountryEndpoint = "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/stats"
 )
 
 func doCovidReq(newUrl string) (res *http.Response) {
@@ -28,6 +28,7 @@ func createCovidWidget(c *gin.Context) {
 
 func getCovidWidget(c *gin.Context) {
 	//widgetID := c.Query("widget_id")
+	//u, _ := url.Parse(CovidCountryEndpoint)
 	u, _ := url.Parse(CovidCountryEndpoint)
 	log.Println("url:", u)
 	values, _ := url.ParseQuery(u.RawQuery)

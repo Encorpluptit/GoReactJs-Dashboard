@@ -9,10 +9,9 @@ import (
 )
 
 func testWidget(c *gin.Context) {
-	u, _ := url.Parse(CovidCountryEndpoint)
+	u, _ := url.Parse(CovidAllCountryEndpoint)
 	log.Println("url:", u)
 	values, _ := url.ParseQuery(u.RawQuery)
-	values.Set("name", "italy")
 	values.Set("format", "json")
 	u.RawQuery = values.Encode()
 	fmt.Println("new url:", u)

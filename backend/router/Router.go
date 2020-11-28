@@ -2,6 +2,7 @@ package router
 
 import (
 	"AppDev_DashBoard/middlewares"
+	"github.com/gin-gonic/contrib/cors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -21,6 +22,11 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 	})
 	r.GET("/about.json", about)
 	r.Use(store)
+	corsConfig := cors.DefaultConfig()
+	//corsConfig.AllowOriginFunc = func(origin string) bool {
+	//	return origin == "http://127.0.0.1:3000"
+	//}
+	r.Use(cors.New(corsConfig))
 	auth := r.Group("/" + rAuth)
 	{
 		auth.POST("/login", login)

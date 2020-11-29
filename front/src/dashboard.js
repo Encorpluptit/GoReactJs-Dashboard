@@ -16,6 +16,7 @@ import SimpleCard from './card.js';
 import UserAuth from "./Auth";
 import CovidSettings from "./SettingsWidget/settingsCovid";
 import WidgetCoinranking from './SettingsWidget/settingCoinranking.js';
+import NewsSettings from "./SettingsWidget/settingsNews";
 
 const drawerWidth = 240;
 
@@ -108,6 +109,7 @@ class Dashboard extends React.Component {
           <WidgetGithub/>
           <WidgetCoinranking/>
           <CovidSettings fct={this.pushWidgetTest}/>
+          <NewsSettings fct={this.pushWidgetTest}/>
           <Button variant="contained" color="primary" onClick={this.logOut}>Logout</Button>
         </Drawer>
         <main className={classes.content}>

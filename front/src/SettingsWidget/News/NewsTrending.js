@@ -65,7 +65,7 @@ function fieldsToMap(fields) {
     return fieldsMap
 }
 
-class CovidWidget extends Component {
+class NewsWidget extends Component {
     constructor(props) {
         // console.log("ICI CONNARD!")
         // console.log(props.widget)
@@ -77,7 +77,7 @@ class CovidWidget extends Component {
             isLoaded: false,
             items: [],
             infos: null,
-            covType: props.widget.type,
+            newsType: props.widget.type,
             timer: props.widget.timer || 30,
             fields: fieldsToMap(props.widget.fields)
         };
@@ -100,25 +100,14 @@ class CovidWidget extends Component {
                 'Authorization': 'Bearer ' + UserAuth.getToken(),
             },
         };
-        fetch(process.env.REACT_APP_API_URL + '/widget/covid/get/' + this.widget.ID.toString(), requestOptions)
+        fetch(process.env.REACT_APP_API_URL + '/widget/news/get/' + this.widget.ID.toString(), requestOptions)
             .then(res => res.json())
             .then(
                 (result) => {
-                    if (this.widget.type === "Stat") {
-                        this.setState({
-                            isLoaded: true,
-                            items: result.data.covid19Stats,
-                            lastChecked: result.data.lastChecked,
-                        });
-                    } else {
-                        console.log("DATAS")
-                        console.log(result.data)
-                        this.setState({
-                            isLoaded: true,
-                            items: [result.data],
-                            lastChecked: result.data.lastChecked,
-                        });
-                    }
+                    this.setState({
+                        isLoaded: true,
+                        items: result.data.results,
+                    });
                     console.log(result.data)
                 },
                 (error) => {
@@ -147,8 +136,7 @@ class CovidWidget extends Component {
             return (
                 <Card className={classes.root}>
                     <CardHeader
-                        title="Covid Country Data"
-                        subheader="September 14, 2016"
+                        title="News Trending"
                     />
                     <CardActions disableSpacing>
                         <IconButton
@@ -164,35 +152,22 @@ class CovidWidget extends Component {
                     </CardActions>
                     {/*<Collapse in={expanded} timeout="auto" unmountOnExit>*/}
                     <CardContent>
-                        <Typography paragraph>Last checked: {lastChecked}</Typography>
                         <Typography paragraph>
-                            {(items.length === 1 &&
-                                <Typography paragraph>
-                                    {items[0].country}
-                                    <ul>
-                                        {fields.confirmed && <li>confirmed: {items[0].confirmed}</li>}
-                                        {fields.deaths && <li>deaths: {items[0].deaths}</li>}
-                                        {fields.recovered && <li>recovered: {items[0].recovered}</li>}
-                                        {fields.lastChecked && <li>Last checked: {items[0].lastChecked}</li>}
-                                        {fields.lastReported && <li>Last reported: {items[0].lastReported}</li>}
-                                    </ul>
-                                </Typography>
-                            ) || <ul>
+                            <ul>
                                 {items.map(item => (
                                     <li>
-                                        {item.country}
+                                        {item.title}
                                         <Typography paragraph>
                                             <ul>
-                                                {fields.confirmed && <li>confirmed: {item.confirmed}</li>}
-                                                {fields.deaths && <li>deaths: {item.deaths}</li>}
-                                                {fields.recovered && <li>recovered: {item.recovered}</li>}
-                                                {fields.lastChecked && <li>Last checked: {item.lastChecked}</li>}
-                                                {fields.lastReported && <li>Last reported: {item.lastReported}</li>}
+                                                {fields.author && <li>Author: {item.author}</li>}
+                                                {fields.date && <li>Date: {item.date}</li>}
+                                                {fields.source_name && <li>Source Name: {item.source_name}</li>}
+                                                {fields.url && <li><a href={item.url}>Url: </a></li>}
                                             </ul>
                                         </Typography>
                                     </li>
                                 ))}
-                            </ul>}
+                            </ul>
                         </Typography>
                     </CardContent>
                     {/*</Collapse>*/}
@@ -202,32 +177,30 @@ class CovidWidget extends Component {
     }
 }
 
-export default function CovidTotal(props) {
+export default function NewsWidgetCore(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [timer, setTimer] = React.useState('');
-    const [country, setCountry] = React.useState('');
-    const [confirmed, setConfirmed] = React.useState(true);
-    const [recovered, setRecovered] = React.useState(true);
-    const [deaths, setDeaths] = React.useState(true);
-    const [reported, setLastReported] = React.useState(true);
-    const [checked, setLastChecked] = React.useState(true);
+    const [topic, setTopic] = React.useState('');
+    const [author, setAuthor] = React.useState(true);
+    const [date, setDate] = React.useState(true);
+    const [sourceName, setSourceName] = React.useState(true);
+    const [newsUrl, setNewsUrl] = React.useState(true);
+    const newsType = props.newsType || "Trending";
     const FetchData = () => {
         const fields =
-            (confirmed ? 'confirmed,' : '')
-            + (recovered ? 'recovered,' : '')
-            + (deaths ? 'deaths,' : '')
-            + (reported ? 'lastReported,' : '')
-            + (checked ? 'lastChecked' : '')
-        FetchCovid(timer, country, covType, fields)
+            (author ? 'author,' : '')
+            + (date ? 'date,' : '')
+            + (sourceName ? 'source_name,' : '')
+            + (newsUrl ? 'url' : '')
+        FetchCovid(timer, topic, newsType, fields)
         handleClose()
     }
-    const covType = props.covType || "Total";
     const pushGrid = (obj) => {
         props.fct(obj)
     }
 
-    const FetchCovid = (timer, country, covType, fields) => {
+    const FetchCovid = (timer, topic, covType, fields) => {
         const requestOptions = {
             method: 'POST',
             headers: {
@@ -238,14 +211,14 @@ export default function CovidTotal(props) {
         };
         const queryFields = encodeURIComponent(fields)
         const queryTimer = encodeURIComponent(parseInt(timer, 10) || 30)
-        const queryCountry = encodeURIComponent(country)
+        const queryTopic = encodeURIComponent(topic)
         const queryType = encodeURIComponent(covType)
-        const urlFetch = `${process.env.REACT_APP_API_URL}/widget/covid/create?type=${queryType}&fields=${queryFields}&timer=${queryTimer}&country=${queryCountry}`
+        const urlFetch = `${process.env.REACT_APP_API_URL}/widget/news/create?type=${queryType}&fields=${queryFields}&timer=${queryTimer}&topic=${queryTopic}`
         fetch(urlFetch, requestOptions)
             .then(res => res.json())
             .then(
                 (result) => {
-                    pushGrid(<CovidWidget widget={result}/>)
+                    pushGrid(<NewsWidget widget={result}/>)
                 },
                 (error) => {
                     console.log(error)
@@ -264,29 +237,29 @@ export default function CovidTotal(props) {
     return (
         <React.Fragment>
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                {covType}
+                {newsType}
             </Button>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="max-width-dialog-title"
             >
-                <DialogTitle id="max-width-dialog-title">Covid 19</DialogTitle>
+                <DialogTitle id="max-width-dialog-title">News</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {covType}
+                        {newsType}
                     </DialogContentText>
                     <form className={classes.form} noValidate>
                         <FormControl className={classes.formControl}>
                             <div>
                                 <TextField
-                                    label="Country" id="standard-size-small" defaultValue="France"
-                                    onChange={(e) => setCountry(e.target.value)}
-                                    size="small"/>
-                                <TextField
                                     label="Timer" id="standard-size-small" defaultValue="30"
                                     onChange={(e) => setTimer(e.target.value)}
                                     size="small"/>
+                                {newsType === "Search" && <TextField
+                                    label="Topic" id="standard-size-small" defaultValue=""
+                                    onChange={(e) => setTopic(e.target.value)}
+                                    size="small"/>}
                             </div>
                             <div>
                                 <Checkbox
@@ -294,9 +267,9 @@ export default function CovidTotal(props) {
                                     defaultChecked
                                     color="primary"
                                     inputProps={{'aria-label': 'secondary checkbox'}}
-                                    onClick={(e) => setConfirmed(e.target.checked ? !e.target.checked : e.target.checked)}
+                                    onClick={(e) => setAuthor(e.target.checked ? !e.target.checked : e.target.checked)}
                                 />
-                                Confirmed
+                                Author
                             </div>
                             <div>
                                 <Checkbox
@@ -304,9 +277,9 @@ export default function CovidTotal(props) {
                                     defaultChecked
                                     color="primary"
                                     inputProps={{'aria-label': 'secondary checkbox'}}
-                                    onClick={(e) => setRecovered(e.target.checked ? !e.target.checked : e.target.checked)}
+                                    onClick={(e) => setDate(e.target.checked ? !e.target.checked : e.target.checked)}
                                 />
-                                Recovered
+                                Date
                             </div>
                             <div>
                                 <Checkbox
@@ -314,9 +287,9 @@ export default function CovidTotal(props) {
                                     defaultChecked
                                     color="primary"
                                     inputProps={{'aria-label': 'secondary checkbox'}}
-                                    onClick={(e) => setDeaths(e.target.checked ? !e.target.checked : e.target.checked)}
+                                    onClick={(e) => setSourceName(e.target.checked ? !e.target.checked : e.target.checked)}
                                 />
-                                Deaths
+                                News Source Name
                             </div>
                             <div>
                                 <Checkbox
@@ -324,19 +297,9 @@ export default function CovidTotal(props) {
                                     defaultChecked
                                     color="primary"
                                     inputProps={{'aria-label': 'secondary checkbox'}}
-                                    onClick={(e) => setLastReported(e.target.checked ? !e.target.checked : e.target.checked)}
+                                    onClick={(e) => setNewsUrl(e.target.checked ? !e.target.checked : e.target.checked)}
                                 />
-                                Last Reported
-                            </div>
-                            <div>
-                                <Checkbox
-                                    /* open={celcius} */
-                                    defaultChecked
-                                    color="primary"
-                                    inputProps={{'aria-label': 'secondary checkbox'}}
-                                    onClick={(e) => setLastChecked(e.target.checked ? !e.target.checked : e.target.checked)}
-                                />
-                                Last Checked
+                                News Url
                             </div>
                         </FormControl>
                     </form>

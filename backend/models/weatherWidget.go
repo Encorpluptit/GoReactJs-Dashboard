@@ -4,8 +4,10 @@ import "gorm.io/gorm"
 
 type WeatherWidget struct {
 	gorm.Model
-	UserID uint `json:"user_id"`
-	Timer  int  `json:"timer"`
+	UserID uint   `json:"user_id"`
+	Timer  int    `json:"timer"`
+	City   string `gorm:"size:100" json:"city"`
+	Fields string `gorm:"size:100" json:"fields"`
 }
 
 //"recovered":12543
@@ -13,10 +15,12 @@ type WeatherWidget struct {
 //"confirmed":37658
 //"lastChecked":"2020-04-21T18:54:05+00:00"
 //"lastReported":"2020-04-20T23:44:34+00:00"
-func NewWeatherWidget(userID uint, covType, country string, fields string, timer int) *WeatherWidget {
+func NewWeatherWidget(userID uint, city string, fields string, timer int) *WeatherWidget {
 	return &WeatherWidget{
 		UserID: userID,
 		Timer:  timer,
+		City:   city,
+		Fields: fields,
 	}
 }
 

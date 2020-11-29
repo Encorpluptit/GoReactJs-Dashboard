@@ -22,6 +22,7 @@ type User struct {
 	CovidWidgets   []CovidWidget   `json:"covid_widgets"`
 	CoinWidgets    []CoinWidget    `json:"coin_widgets"`
 	WeatherWidgets []WeatherWidget `json:"weather_widgets"`
+	NewsWidgets    []WeatherWidget `json:"news_widgets"`
 }
 
 func Hash(password string) ([]byte, error) {

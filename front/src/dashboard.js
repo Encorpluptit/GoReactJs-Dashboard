@@ -42,10 +42,6 @@ const useStyles = theme => ({
   },
 });
 
-function GetHistory() {
-  return useHistory()
-}
-
 class Dashboard extends React.Component {
 
   constructor(props) {
@@ -63,20 +59,6 @@ class Dashboard extends React.Component {
     UserAuth.clear()
     if(history) history.push('/');
   }
-  //
-  // logOut = () => {
-  //   UserAuth.clear()
-  //   this.history().push("/");
-  // };
-
-  // handleClick = e => {
-  //   this.props.history.push("/");
-  // };
-
-  pushWidget1() {
-    console.log("PTDR PUUUUUUSH");
-    this.state.gridCard.push(<SimpleCard></SimpleCard>);
-  }
 
   pushWidgetTest = (obj) => {
     this.setState(state => {
@@ -85,7 +67,6 @@ class Dashboard extends React.Component {
         gridCard,
       };
     });
-    console.log("PTDR PUUUUUUSH");
   }
 
   render() {
@@ -121,8 +102,8 @@ class Dashboard extends React.Component {
         >
           <div className={classes.toolbar} />
           <WidgetWeather fct={this.pushWidgetTest}/>
-          <WidgetGmail></WidgetGmail>
-          <WidgetGithub></WidgetGithub>
+          <WidgetGmail/>
+          <WidgetGithub/>
           <CovidSettings fct={this.pushWidgetTest}/>
           <Button variant="contained" color="primary" onClick={this.logOut}>Logout</Button>
         </Drawer>

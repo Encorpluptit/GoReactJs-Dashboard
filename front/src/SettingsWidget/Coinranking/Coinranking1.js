@@ -34,6 +34,7 @@ export default function Coinranking1(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const pushGrid = () => props.fct(<SimpleCard></SimpleCard>)
+  const [timer, setTimer] = React.useState('');
 
   const [TotalCoins, setCoins] = React.useState(false);
   const [TotalMarkets, setMarkets] = React.useState(false);
@@ -68,6 +69,10 @@ export default function Coinranking1(props) {
             <FormControl className={classes.formControl}>
             <div>
               <TextField label="City" id="standard-size-small" defaultValue="City" size="small" />
+              <TextField
+                label="Timer" id="standard-size-small" defaultValue="30"
+                onChange={(e) => setTimer(e.target.value)}
+                size="small"/>
             </div>
             <div>
             <Checkbox
@@ -75,7 +80,7 @@ export default function Coinranking1(props) {
               defaultChecked
               color="primary"
               inputProps={{ 'aria-label': 'secondary checkbox' }}
-              onClick={setCoins}
+              onClick={(e) => setCoins(e.target.checked ? !e.target.checked : e.target.checked)}
             />
             TotalCoins
             </div>
@@ -85,7 +90,7 @@ export default function Coinranking1(props) {
               defaultChecked
               color="primary"
               inputProps={{ 'aria-label': 'secondary checkbox' }}
-              onClick={setMarkets}
+              onClick={(e) => setMarkets(e.target.checked ? !e.target.checked : e.target.checked)}
             />
             TotalMarkets
             <Checkbox
@@ -93,7 +98,7 @@ export default function Coinranking1(props) {
               defaultChecked
               color="primary"
               inputProps={{ 'aria-label': 'secondary checkbox' }}
-              onClick={setExchanges}
+              onClick={(e) => setExchanges(e.target.checked ? !e.target.checked : e.target.checked)}
             />
             TotalExchanges
             <Checkbox
@@ -101,7 +106,7 @@ export default function Coinranking1(props) {
               defaultChecked
               color="primary"
               inputProps={{ 'aria-label': 'secondary checkbox' }}
-              onClick={setMarketCap}
+              onClick={(e) => setMarketCap(e.target.checked ? !e.target.checked : e.target.checked)}
             />
             TotalMarketCap
             <Checkbox
@@ -109,7 +114,7 @@ export default function Coinranking1(props) {
               defaultChecked
               color="primary"
               inputProps={{ 'aria-label': 'secondary checkbox' }}
-              onClick={setTotal24hVolume}
+              onClick={(e) => setTotal24hVolume(e.target.checked ? !e.target.checked : e.target.checked)}
             />
             Total24hVolume
             </div>

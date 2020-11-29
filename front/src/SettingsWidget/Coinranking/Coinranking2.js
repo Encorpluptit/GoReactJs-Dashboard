@@ -35,9 +35,25 @@ export default function Weather1(props) {
   const [open, setOpen] = React.useState(false);
   const pushGrid = () => props.fct(<SimpleCard></SimpleCard>)
 
-  const [city, setCity] = React.useState('');
   const [celcius, setCelcius] = React.useState(false);
   const [fahreneit, setFahreneit] = React.useState(false);
+
+
+  const handleBoxCelcius = () => {
+    if (celcius)
+      setCelcius(false);
+    else
+      setCelcius(true);
+    console.log(celcius);
+  };
+
+  const handleBoxFahreneit = () => {
+    if (fahreneit)
+      setFahreneit(false);
+    else
+      setFahreneit(true);
+      console.log(fahreneit);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -65,7 +81,7 @@ export default function Weather1(props) {
           <form className={classes.form} noValidate>
             <FormControl className={classes.formControl}>
             <div>
-              <TextField label="City" id="standard-size-small" defaultValue="City" size="small" onChange={(e) => setCity(e.target.value)} />
+              <TextField label="City" id="standard-size-small" defaultValue="City" size="small" />
             </div>
             <div>
             <Checkbox
@@ -73,9 +89,9 @@ export default function Weather1(props) {
               defaultChecked
               color="primary"
               inputProps={{ 'aria-label': 'secondary checkbox' }}
-              onClick={setCelcius}
+              onClick={handleBoxCelcius}
             />
-            Celcius
+            Celcus
             </div>
             <div>
             <Checkbox
@@ -83,7 +99,7 @@ export default function Weather1(props) {
               defaultChecked
               color="primary"
               inputProps={{ 'aria-label': 'secondary checkbox' }}
-              onClick={setFahreneit}
+              onClick={handleBoxFahreneit}
             />
             Fahreneit
             </div>

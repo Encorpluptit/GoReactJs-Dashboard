@@ -36,17 +36,6 @@ func GetGithubConf() *oauth2.Config {
 		}
 	}
 	return GithubConf
-	//return &oauth2.Config{
-	//	// TODO: Vars in env
-	//	ClientID:     "a758719d422863f322f7",
-	//	ClientSecret: "a9a92ef0f4156ee312c41effd65589f36d5c4bca",
-	//	//Scopes:       []string{"SCOPE1", "SCOPE2"},
-	//	Scopes: []string{"user", "users"},
-	//	Endpoint: oauth2.Endpoint{
-	//		AuthURL:  "https://github.com/login/oauth/authorize",
-	//		TokenURL: "https://github.com/login/oauth/access_token",
-	//	},
-	//}
 }
 
 //TODO: Change this

@@ -11,7 +11,6 @@ import Container from '@material-ui/core/Container';
 import {useHistory} from 'react-router-dom';
 import './login.css';
 import UserAuth from "./Auth";
-import TestWidget from "./Testwidget";
 import CovidWidget from "./Testwidget";
 
 
@@ -80,7 +79,7 @@ export default function TestLogin() {
                 <Typography component="h1" variant="h5">
                     TestLogin
                 </Typography>
-                <CovidWidget/>
+                <CovidWidget timer={30} covType={"Country"} fields={"recovered,deaths,lastReported,lastChecked"}/>
                 <MyButton
                     // type="submit"
                     fullWidth

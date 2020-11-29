@@ -42,8 +42,8 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 	{
 		covid := widgets.Group("/" + rCovid)
 		{
-			covid.GET("/get", getCovidWidget)
-			covid.POST("/create", getCovidWidget)
+			covid.GET("/get/:id", getCovidWidget)
+			covid.POST("/create/*country", createCovidWidget)
 		}
 	}
 	githubWidgets := r.Group("/" + rGithub).Use(middlewares.GithubMiddleware())
@@ -55,6 +55,7 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 		googleWidgets.GET("/repo", GoogleRepo)
 	}
 	r.GET("/test", testWidget)
+	//r.POST("/"+rWidget+"/" + rCovid+"/create", createCovidWidget)
 
 	//githubWidgets.Use()
 	//auth.Use(store)

@@ -31,21 +31,15 @@ function customerStyles(theme) {
     }));
 }
 
-// const customerStyles = makeStyles((theme) => ({
-//     root: {
-//         maxWidth: 345,
-//     },
-//     expand: {
-//         transform: 'rotate(0deg)',
-//         marginLeft: 'auto',
-//         transition: theme.transitions.create('transform', {
-//             duration: theme.transitions.duration.shortest,
-//         }),
-//     },
-//     expandOpen: {
-//         transform: 'rotate(180deg)',
-//     },
-// }));
+function fieldsToMap(fields) {
+    const array = fields.split(',')
+    let fieldsMap = []
+    for (let i = 0; i < array.length; i++) {
+        fieldsMap[array[i]] = true
+    }
+    console.log(fieldsMap)
+    return fieldsMap
+}
 
 export default class CovidWidget extends Component {
     constructor(props) {
@@ -56,33 +50,14 @@ export default class CovidWidget extends Component {
             isLoaded: false,
             items: [],
             infos: null,
-            // timer: parseInt(props.startTimeInSeconds, 10) || 0,
-            timer: parseInt(props.timer, 10) || 0,
+            covType: props.CovType,
+            timer: props.timer || 30,
+            fields: fieldsToMap(props.fields)
+            // fields: props.fields.split(',')
         };
         this.handleExpandClick = this.handleExpandClick.bind(this);
-    }
-
-    // tick() {
-    //     this.setState(state => ({
-    //         seconds: state.seconds + 1
-    //     }));
-    // }
-    //
-    // componentWillUnmount() {
-    //     clearInterval(this.interval);
-    // }
-
-    handleExpandClick() {
-        // this.state.expanded = !this.state.expanded
-        // this.setState(this.state.expanded= !state.expanded);
-        this.setState(state => ({
-            expanded: !state.expanded
-        }));
-    };
-
-    componentDidMount() {
-        // this.interval = setInterval(() => this.tick(), 1000);
-        const requestOptions = {
+        this.fetchDatas = this.fetchDatas.bind(this);
+        this.requestOptions = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -90,16 +65,35 @@ export default class CovidWidget extends Component {
                 'Authorization': 'Bearer ' + UserAuth.getToken(),
             },
         };
-        fetch(process.env.REACT_APP_API_URL + '/test', requestOptions)
+    }
+
+    handleExpandClick() {
+        this.setState(state => ({
+            expanded: !state.expanded
+        }));
+    };
+
+    fetchDatas() {
+        console.log(this.requestOptions)
+        fetch(process.env.REACT_APP_API_URL + '/test', this.requestOptions)
             .then(res => res.json())
             .then(
                 (result) => {
-                    this.setState({
-                        isLoaded: true,
-                        // infos: result,
-                        items: result.data.covid19Stats,
-                        lastChecked: result.data.lastChecked,
-                    });
+                    if (this.state.covType === "Stat") {
+                        this.setState({
+                            isLoaded: true,
+                            // infos: result,
+                            items: result.data.covid19Stats,
+                            lastChecked: result.data.lastChecked,
+                        });
+                    } else {
+                        this.setState({
+                            isLoaded: true,
+                            // infos: result,
+                            items: result.data,
+                            lastChecked: result.data.lastChecked,
+                        });
+                    }
                     console.log(result.data)
                 },
                 (error) => {
@@ -112,9 +106,14 @@ export default class CovidWidget extends Component {
             )
     }
 
+    componentDidMount() {
+        this.interval = setInterval(() => this.fetchDatas(), 1000 * this.state.timer);
+        this.fetchDatas()
+    }
+
     render() {
         const classes = customerStyles(dark);
-        const {expanded, error, isLoaded, items, lastChecked} = this.state;
+        const {expanded, error, isLoaded, items, lastChecked, fields} = this.state;
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -126,13 +125,6 @@ export default class CovidWidget extends Component {
                         title="Covid Country Data"
                         subheader="September 14, 2016"
                     />
-                    <CardContent>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            This impressive paella is a perfect party dish and a fun meal to cook together with your
-                            guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                        </Typography>
-                        <Timer timer={5}/>
-                    </CardContent>
                     <CardActions disableSpacing>
                         <IconButton
                             className={clsx(classes.expand, {
@@ -151,35 +143,20 @@ export default class CovidWidget extends Component {
                             <Typography paragraph>
                                 <ul>
                                     {items.map(item => (
-                                        // <Typography paragraph>
                                             <li key={item.keyId}>
                                                 {item.country}
+                                                <Typography paragraph>
+                                                <ul>
+                                                    {fields.confirmed && <li>confirmed: {item.confirmed}</li>}
+                                                    {fields.deaths && <li>deaths: {item.deaths}</li>}
+                                                    {fields.recovered && <li>recovered: {item.recovered}</li>}
+                                                    {fields.lastChecked && <li>Last checked: {item.lastChecked}</li>}
+                                                    {fields.lastReported && <li>Last reported: {item.lastReported}</li>}
+                                                </ul>
+                                                </Typography>
                                             </li>
-                                        // </Typography>
                                     ))}
                                 </ul>
-                            </Typography>
-                            <Typography paragraph>
-                                Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
-                                minutes.
-                            </Typography>
-                            <Typography paragraph>
-                                Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high
-                                heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly
-                                browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken
-                                and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion, salt and
-                                pepper, and cook, stirring often until thickened and fragrant, about 10 minutes. Add
-                                saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-                            </Typography>
-                            <Typography paragraph>
-                                Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook
-                                without stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat to
-                                medium-low, add reserved shrimp and mussels, tucking them down into the rice, and cook
-                                again without stirring, until mussels have opened and rice is just tender, 5 to 7
-                                minutes more. (Discard any mussels that don’t open.)
-                            </Typography>
-                            <Typography>
-                                Set aside off of the heat to let rest for 10 minutes, and then serve.
                             </Typography>
                         </CardContent>
                     </Collapse>

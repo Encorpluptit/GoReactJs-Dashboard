@@ -9,7 +9,7 @@ import (
 )
 
 func testWidget(c *gin.Context) {
-	u, _ := url.Parse(CovidAllCountryEndpoint)
+	u, _ := url.Parse(CovidWorldEndpoint)
 	log.Println("url:", u)
 	values, _ := url.ParseQuery(u.RawQuery)
 	values.Set("format", "json")

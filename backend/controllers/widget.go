@@ -6,17 +6,19 @@ import (
 )
 
 func FindCovidByID(id uint) (*models.CovidWidget, error) {
-	widg := &models.CovidWidget{}
-	return widg.FindCovidWidgetByID(database.BackendDB.DB, id)
-	//widg.SaveCovidWidget()
-	//return nil, nil
+	widget := &models.CovidWidget{}
+	widget.ID = id
+	if err := widget.FindByID(database.BackendDB.DB, id); err != nil {
+		return nil, err
+	}
+	return widget, nil
 }
 
-func createCovid(widgType string, user *models.User) (*models.CovidWidget, error) {
-	widg := &models.CovidWidget{
-		Type: widgType,
+func CreateCovid(userID uint, covType, country string, fields string, timer int) (*models.CovidWidget, error) {
+	widget := models.NewCovidWidget(userID, covType, country, fields, timer)
+
+	if err := widget.Save(database.BackendDB.DB); err != nil {
+		return nil, err
 	}
-	return widg.SaveCovidWidget(database.BackendDB.DB)
-	//widg.SaveCovidWidget()
-	//return nil, nil
+	return widget, nil
 }

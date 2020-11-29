@@ -28,9 +28,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Weather1() {
+export default function Weather1(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const pushGrid = () => props.fct()
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -67,7 +68,7 @@ export default function Weather1() {
           <Button onClick={handleClose} color="primary">
             Save
           </Button>
-          <Button onClick={Dashboard.pushWidget1} color="primary">
+          <Button onClick={pushGrid} color="primary">
             Close
           </Button>
         </DialogActions>

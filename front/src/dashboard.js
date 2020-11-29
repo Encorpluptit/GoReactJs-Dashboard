@@ -48,6 +48,7 @@ class Dashboard extends React.Component {
     this.state = {
       gridCard: []
     };
+    this.pushWidgetTest = this.pushWidgetTest.bind(this)
   }
 
   handleClick = e => {
@@ -57,6 +58,14 @@ class Dashboard extends React.Component {
   pushWidget1() {
     console.log("PTDR PUUUUUUSH");
     this.state.gridCard.push(<SimpleCard></SimpleCard>);
+  }
+
+  pushWidgetTest() {
+    console.log("PTDR PUUUUUUSH");
+    this.setState({
+      gridCard: this.state.gridCard.push(<SimpleCard>COUCOU</SimpleCard>)
+    })
+    this.state.gridCard.push(<SimpleCard>COUCOU</SimpleCard>);
   }
 
   render() {
@@ -87,7 +96,7 @@ class Dashboard extends React.Component {
           anchor="left"
         >
           <div className={classes.toolbar} />
-          <WidgetWeather></WidgetWeather>
+          <WidgetWeather fct={this.pushWidgetTest}/>
           <WidgetGmail></WidgetGmail>
           <WidgetGithub></WidgetGithub>
           <Button variant="contained" color="primary" onClick={this.handleClick}>Logout</Button>

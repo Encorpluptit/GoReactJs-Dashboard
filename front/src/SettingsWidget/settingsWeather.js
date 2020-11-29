@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function WidgetWeather() {
+export default function WidgetWeather(props) {
   const classes = useStyles();
 
   return (
@@ -34,7 +34,7 @@ export default function WidgetWeather() {
           <Typography className={classes.heading}>Weather</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Weather1>Widget 1</Weather1>
+          <Weather1 fct={props.fct}>Widget 1</Weather1>
           <Weather2>Widget 2</Weather2>
         </AccordionDetails>
       </Accordion>

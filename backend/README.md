@@ -23,4 +23,4 @@ widgets:
         - Gmail
         - 
 rapid API
-    
+TODO: allow user to use different accounts with same widgets

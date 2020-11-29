@@ -2,18 +2,17 @@ package router
 
 import (
 	"AppDev_DashBoard/middlewares"
+	"github.com/gin-gonic/contrib/cors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 const (
-	rAuth   = "auth"
-	rGithub = "github"
-	//rModule       = "module"
-	//RProject      = "project"
-	//rFunction     = "function"
-	//rType         = "type"
-	//rName         = "name"
+	rAuth         = "auth"
+	rGithub       = "github"
+	rGoogle       = "google"
+	rWidget       = "widget"
+	rCovid        = "covid"
 	InternalError = http.StatusForbidden
 )
 
@@ -23,17 +22,42 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 	})
 	r.GET("/about.json", about)
 	r.Use(store)
+	corsConfig := cors.DefaultConfig()
+	//corsConfig.AllowOriginFunc = func(origin string) bool {
+	//	return origin == "http://127.0.0.1:3000"
+	//}
+	r.Use(cors.New(corsConfig))
 	auth := r.Group("/" + rAuth)
 	{
 		auth.POST("/login", login)
 		auth.POST("/register", register)
-		auth.Use(middlewares.GHLoginMiddelware()).GET("/github", githubAuth)
-		auth.GET("/github/success", githubAuthSuccess)
+		auth.GET(middlewares.GithubAuthLoginUrl, githubAuth)
+		auth.GET(middlewares.GithubAuthRegisterUrl, githubAuth)
+		auth.GET("/github/success", githubAuthSuccess, middlewares.GithubOAuthSuccess())
+		auth.GET(middlewares.GoogleAuthLoginUrl, googleAuth)
+		auth.GET(middlewares.GoogleAuthRegisterUrl, googleAuth)
+		auth.GET("/google/success", googleAuthSuccess, middlewares.GoogleOAuthSuccess())
 	}
-	auth.Use(store)
-	githubWidgets := r.Group("/" + rGithub)
+	widgets := r.Group("/"+rWidget, middlewares.SetMiddlewareAuthentication())
+	{
+		covid := widgets.Group("/" + rCovid)
+		{
+			covid.GET("/get/:id", getCovidWidget)
+			covid.POST("/create/*country", createCovidWidget)
+		}
+	}
+	githubWidgets := r.Group("/" + rGithub).Use(middlewares.GithubMiddleware())
 	{
 		githubWidgets.GET("/repo", GithubRepo)
 	}
-	githubWidgets.Use(middlewares.GHMiddleware())
+	googleWidgets := r.Group("/" + rGoogle).Use(middlewares.GoogleMiddleware())
+	{
+		googleWidgets.GET("/repo", GoogleRepo)
+	}
+	r.GET("/test", testWidget)
+	//r.POST("/"+rWidget+"/" + rCovid+"/create", createCovidWidget)
+
+	//githubWidgets.Use()
+	//auth.Use(store)
+	//githubWidgets.Use(store)
 }

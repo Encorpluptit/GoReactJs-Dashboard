@@ -146,10 +146,21 @@ export default function SignUp() {
             variant="contained"
             color="blue"
             // onClick={redirectGithub}
-            href={process.env.REACT_APP_API_URL + '/auth/github'}
+            href={process.env.REACT_APP_API_URL + '/auth/github/register'}
             className={classes.submit}
           >
             GITHUB
+          </MyButton>
+          <MyButton
+            // type="submit"
+            fullWidth
+            variant="contained"
+            color="blue"
+            // onClick={redirectGithub}
+            href={process.env.REACT_APP_API_URL + '/auth/google/register'}
+            className={classes.submit}
+          >
+            Google
           </MyButton>
         </form>
       </div>

@@ -50,8 +50,8 @@ func FindWeatherByID(id uint) (*models.WeatherWidget, error) {
 	return widget, nil
 }
 
-func CreateWeather(userID uint, covType, country string, fields string, timer int) (*models.WeatherWidget, error) {
-	widget := models.NewWeatherWidget(userID, covType, country, fields, timer)
+func CreateWeather(userID uint, city string, fields string, timer int) (*models.WeatherWidget, error) {
+	widget := models.NewWeatherWidget(userID, city, fields, timer)
 
 	if err := widget.Save(database.BackendDB.DB); err != nil {
 		return nil, err
@@ -70,6 +70,24 @@ func FindCoinByID(id uint) (*models.CoinWidget, error) {
 
 func CreateCoin(userID uint, covType, country string, fields string, timer int) (*models.CoinWidget, error) {
 	widget := models.NewCoinWidget(userID, covType, country, fields, timer)
+
+	if err := widget.Save(database.BackendDB.DB); err != nil {
+		return nil, err
+	}
+	return widget, nil
+}
+
+func FindNewsByID(id uint) (*models.NewsWidget, error) {
+	widget := &models.NewsWidget{}
+	widget.ID = id
+	if err := widget.FindByID(database.BackendDB.DB, id); err != nil {
+		return nil, err
+	}
+	return widget, nil
+}
+
+func CreateNews(userID uint, newsType, lang, topic, fields string, timer int) (*models.NewsWidget, error) {
+	widget := models.NewNewsWidget(userID, newsType, lang, topic, fields, timer)
 
 	if err := widget.Save(database.BackendDB.DB); err != nil {
 		return nil, err

@@ -14,6 +14,7 @@ const (
 	rWidget       = "widget"
 	rCovid        = "covid"
 	rCoin         = "coin"
+	rNews         = "news"
 	rWeather      = "weather"
 	InternalError = http.StatusForbidden
 )
@@ -50,17 +51,22 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 		coin := widgets.Group("/" + rCoin)
 		{
 			coin.GET("/get/:id", getCovidWidget)
-			coin.POST("/create/*country", createCovidWidget)
+			coin.POST("/create", createCovidWidget)
 		}
 		weather := widgets.Group("/" + rWeather)
 		{
-			weather.GET("/get/:id", getCovidWidget)
-			weather.POST("/create/*country", createCovidWidget)
+			weather.GET("/get/:id", getWeatherWidget)
+			weather.POST("/create", createWeatherWidget)
+		}
+		news := widgets.Group("/" + rNews)
+		{
+			news.GET("/get/:id", getNewsWidget)
+			news.POST("/create", createNewsWidget)
 		}
 		github := widgets.Group("/" + rGithub)
 		{
 			github.GET("/get/:id", getCovidWidget)
-			github.POST("/create/*country", createCovidWidget)
+			github.POST("/create", createCovidWidget)
 		}
 	}
 	githubWidgets := r.Group("/" + rGithub).Use(middlewares.GithubMiddleware())

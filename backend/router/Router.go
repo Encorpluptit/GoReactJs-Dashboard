@@ -63,22 +63,17 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 			news.GET("/get/:id", getNewsWidget)
 			news.POST("/create", createNewsWidget)
 		}
-		//github := widgets.Group("/" + rGithub)
-		//{
-		//	github.GET("/get/:id", getCovidWidget)
-		//	github.POST("/create", createCovidWidget)
-		//}
-		github := r.Group("/" + rGithub).Use(middlewares.GithubMiddleware())
+		github := widgets.Group("/" + rGithub)
 		{
-			github.POST("/create", createGithubWidget)
 			github.GET("/get/:id", getGithubWidget)
+			github.POST("/create", createGithubWidget)
 		}
 	}
 	googleWidgets := r.Group("/" + rGoogle).Use(middlewares.GoogleMiddleware())
 	{
 		googleWidgets.GET("/repo", GoogleRepo)
 	}
-	r.GET("/test", testWidget)
+	//r.GET("/test", testWidget)
 	//r.POST("/"+rWidget+"/" + rCovid+"/create", createCovidWidget)
 
 	//githubWidgets.Use()

@@ -38,14 +38,44 @@ func dumpAboutJSON(c *gin.Context) aboutJson {
 func getServices() []service {
 	return []service{
 		{
-			Name: "weather",
+			Name: "news",
 			Widgets: []widget{
 				{
-					Name:        "city_temperature",
-					Description: "Display temperature for a city",
+					Name:        "Trending",
+					Description: "Displaying the list of the last trending articles",
 					Params: []param{
 						{
-							Name: "city",
+							Name: "type",
+							Type: "string",
+						},
+						{
+							Name: "timer",
+							Type: "integer",
+						},
+						{
+							Name: "fields",
+							Type: "string",
+						},
+					},
+				},
+				{
+					Name:        "Search",
+					Description: "Displaying the list of articles given specific Topic",
+					Params: []param{
+						{
+							Name: "type",
+							Type: "string",
+						},
+						{
+							Name: "timer",
+							Type: "integer",
+						},
+						{
+							Name: "Topic",
+							Type: "string",
+						},
+						{
+							Name: "fields",
 							Type: "string",
 						},
 					},
@@ -53,19 +83,99 @@ func getServices() []service {
 			},
 		},
 		{
-			Name: "rss",
+			Name: "Weather",
 			Widgets: []widget{
 				{
-					Name:        "article_list",
-					Description: "Displaying the list of the last articles",
+					Name:        "Weather",
+					Description: "Give information about Weather given a city",
 					Params: []param{
 						{
-							Name: "link",
+							Name: "type",
 							Type: "string",
 						},
 						{
-							Name: "number",
+							Name: "timer",
 							Type: "integer",
+						},
+						{
+							Name: "City",
+							Type: "string",
+						},
+						{
+							Name: "fields",
+							Type: "string",
+						},
+					},
+				},
+			},
+		},
+		{
+			Name: "Github",
+			Widgets: []widget{
+				{
+					Name:        "UserInfos",
+					Description: "Give information about User currently logged with Github Oauth",
+					Params: []param{
+						{
+							Name: "authType",
+							Type: "string",
+						},
+						{
+							Name: "widgetType",
+							Type: "string",
+						},
+						{
+							Name: "timer",
+							Type: "integer",
+						},
+						{
+							Name: "fields",
+							Type: "string",
+						},
+					},
+				},
+			},
+		},
+		{
+			Name: "Covid",
+			Widgets: []widget{
+				{
+					Name:        "Total",
+					Description: "Give computed stats (World or specified country)",
+					Params: []param{
+						{
+							Name: "type",
+							Type: "string",
+						},
+						{
+							Name: "timer",
+							Type: "integer",
+						},
+						{
+							Name: "Country",
+							Type: "string",
+						},
+					},
+				},
+				{
+					Name:        "Stats",
+					Description: "Give complete stats (World or specified country)",
+					Params: []param{
+						{
+							Name: "type",
+							Type: "string",
+						},
+						{
+							Name: "timer",
+							Type: "integer",
+						},
+						{
+							Name: "Country",
+							Type: "string",
+						},
+						{
+							Name: "fields",
+							Type: "string",
 						},
 					},
 				},

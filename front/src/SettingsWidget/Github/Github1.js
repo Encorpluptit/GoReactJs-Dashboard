@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -152,33 +152,15 @@ class GithubWidget extends Component {
             {/*<Collapse in={expanded} timeout="auto" unmountOnExit>*/}
             <CardContent>
               <Typography paragraph>
-                {/*{(items.length === 1 &&*/}
-                {/*    <Typography paragraph>*/}
-                {/*      {items[0].country}*/}
-                {/*      <ul>*/}
-                {/*        {fields.confirmed && <li>confirmed: {items[0].confirmed}</li>}*/}
-                {/*        {fields.deaths && <li>deaths: {items[0].deaths}</li>}*/}
-                {/*        {fields.recovered && <li>recovered: {items[0].recovered}</li>}*/}
-                {/*        {fields.lastChecked && <li>Last checked: {items[0].lastChecked}</li>}*/}
-                {/*        {fields.lastReported && <li>Last reported: {items[0].lastReported}</li>}*/}
-                {/*      </ul>*/}
-                {/*    </Typography>*/}
-                {/*) || <ul>*/}
-                {/*  {items.map(item => (*/}
-                {/*      <li>*/}
-                {/*        {item.country}*/}
-                {/*        <Typography paragraph>*/}
-                {/*          <ul>*/}
-                {/*            {fields.confirmed && <li>confirmed: {item.confirmed}</li>}*/}
-                {/*            {fields.deaths && <li>deaths: {item.deaths}</li>}*/}
-                {/*            {fields.recovered && <li>recovered: {item.recovered}</li>}*/}
-                {/*            {fields.lastChecked && <li>Last checked: {item.lastChecked}</li>}*/}
-                {/*            {fields.lastReported && <li>Last reported: {item.lastReported}</li>}*/}
-                {/*          </ul>*/}
-                {/*        </Typography>*/}
-                {/*      </li>*/}
-                {/*  ))}*/}
-                {/*</ul>}*/}
+                <ul>
+                  {fields.login && <li>Login: {items.login}</li>}
+                  {fields.recovered && <li>recovered: {items.recovered}</li>}
+                  {fields.name && <li>Name: {items.name}</li>}
+                  {fields.email && <li>Email: {items.email}</li>}
+                  {fields.html_url && <li>Url: {items.html_url}</li>}
+                  {fields.total_private_repos && <li>Private Repos: {items.total_private_repos }</li>}
+                  {fields.total_public_repos && <li>Public Repo: {items.total_public_repos}</li>}
+                </ul>
               </Typography>
             </CardContent>
             {/*</Collapse>*/}

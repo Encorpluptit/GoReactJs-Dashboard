@@ -50,8 +50,14 @@ class Dashboard extends React.Component {
     super(props);
     this.state = {
       gridCard: [],
+      gridCovid: [],
+      gridNews: [],
+      gridGithub: [],
     };
     this.pushWidgetTest = this.pushWidgetTest.bind(this)
+    this.pushWidgetCovid = this.pushWidgetCovid.bind(this)
+    this.pushWidgetNews = this.pushWidgetNews.bind(this)
+    this.pushWidgetGithub = this.pushWidgetGithub.bind(this)
     this.logOut = this.logOut.bind(this)
   }
 
@@ -71,12 +77,40 @@ class Dashboard extends React.Component {
     });
   }
 
+  pushWidgetCovid = (obj) => {
+    this.setState(state => {
+      const gridCovid = state.gridCovid.concat(obj);
+      return {
+        gridCovid,
+      };
+    });
+  }
+
+  pushWidgetNews = (obj) => {
+    this.setState(state => {
+      const gridNews = state.gridNews.concat(obj);
+      return {
+        gridNews,
+      };
+    });
+  }
+
+  pushWidgetGithub = (obj) => {
+    this.setState(state => {
+      const gridGithub = state.gridGithub.concat(obj);
+      return {
+        gridGithub,
+      };
+    });
+  }
+
   render() {
     const { classes, history } = this.props;
     const layout = [
       {i: 'a', x: 0, y: 0, w: 1, h: 2},
       {i: 'b', x: 5, y: 0, w: 1, h: 2},
-      {i: 'c', x: 10, y: 0, w: 1, h: 2}
+      {i: 'c', x: 10, y: 0, w: 1, h: 2},
+      {i: 'd', x: 15, y: 0, w: 1, h: 2}
     ];
     /* const handleOnClick = useCallback(() => history.push('/'), [history]); */
 
@@ -106,15 +140,18 @@ class Dashboard extends React.Component {
           <div className={classes.toolbar} />
           <WidgetWeather fct={this.pushWidgetTest}/>
           <WidgetGmail/>
-          <WidgetGithub/>
+          <WidgetGithub fct={this.pushWidgetGithub}/>
           <WidgetCoinranking/>
-          <CovidSettings fct={this.pushWidgetTest}/>
-          <NewsSettings fct={this.pushWidgetTest}/>
+          <CovidSettings fct={this.pushWidgetCovid}/>
+          <NewsSettings fct={this.pushWidgetNews}/>
           <Button variant="contained" color="primary" onClick={this.logOut}>Logout</Button>
         </Drawer>
         <main className={classes.content}>
           <GridLayout className="layout" layout={layout} cols={6} rowHeight={50} width={1200}>
             <div key="a">{this.state.gridCard}</div>
+            <div key="b">{this.state.gridCovid}</div>
+            <div key="c">{this.state.gridNews}</div>
+            <div key="d">{this.state.gridGithub}</div>
           </GridLayout>
           <div className={classes.toolbar} />
         </main>

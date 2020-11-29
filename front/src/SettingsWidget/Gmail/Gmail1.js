@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Gmail1() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [timer, setTimer] = React.useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -57,6 +58,10 @@ export default function Gmail1() {
             <FormControl className={classes.formControl}>
             <div>
               <TextField label="City" id="standard-size-small" defaultValue="Small" size="small" />
+              <TextField
+                label="Timer" id="standard-size-small" defaultValue="30"
+                onChange={(e) => setTimer(e.target.value)}
+                size="small"/>
             </div>
             </FormControl>
           </form>

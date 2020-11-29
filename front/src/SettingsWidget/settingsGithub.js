@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function WidgetGithub() {
+export default function WidgetGithub(props) {
   const classes = useStyles();
 
   return (
@@ -33,8 +33,8 @@ export default function WidgetGithub() {
           <Typography className={classes.heading}>Github</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Github1>Widget 1</Github1>
-          <Github2>Widget 2</Github2>
+          <Github1 fct={props.fct} authType={"Private"} widgetType={"UserInfos"}>Widget 1</Github1>
+          {/*<Github2>Widget 2</Github2>*/}
         </AccordionDetails>
       </Accordion>
     </div>

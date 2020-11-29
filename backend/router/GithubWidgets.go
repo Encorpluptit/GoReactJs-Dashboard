@@ -137,7 +137,6 @@ func GithubRepo(c *gin.Context) {
 		c.Status(resp.StatusCode)
 		return
 	}
-
 	c.DataFromReader(http.StatusOK,
 		resp.ContentLength, gin.MIMEJSON,
 		resp.Body, nil)

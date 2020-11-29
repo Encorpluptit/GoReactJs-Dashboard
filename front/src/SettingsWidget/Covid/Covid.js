@@ -16,8 +16,9 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import IconButton from "@material-ui/core/IconButton";
-import clsx from "clsx";
+import Checkbox from '@material-ui/core/Checkbox';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import clsx from "clsx";
 
 
 function customerStyles(theme) {
@@ -207,6 +208,11 @@ export default function CovidTotal(props) {
     const [timer] = React.useState('30');
     const [country] = React.useState('France');
     const [fields] = React.useState('confirmed,recovered,deaths,lastReported,lastChecked');
+    const [confirmed, setConfirmed] = React.useState(false);
+    const [recovered, setRecovered] = React.useState(false);
+    const [deaths, setDeaths] = React.useState(false);
+    const [reported, setLastReported] = React.useState(false);
+    const [checked, setLastChecked] = React.useState(false);
     const FetchData = () => FetchCovid(timer, country, covType, fields)
     const covType = "Total";
     const pushGrid = (obj) => {
@@ -267,6 +273,57 @@ export default function CovidTotal(props) {
                             <div>
                                 <TextField label="Total Numbers" id="standard-size-small" defaultValue="Small"
                                            size="small"/>
+                            </div>
+                            <div>
+                                <Checkbox
+                                /* open={celcius} */
+                                defaultChecked
+                                color="primary"
+                                inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                onClick={setConfirmed}
+                                />
+                                Confirmed
+                            </div>
+                            <div>
+                                <Checkbox
+                                /* open={celcius} */
+                                defaultChecked
+                                color="primary"
+                                inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                onClick={setRecovered}
+                                />
+                                Recovered
+                            </div>
+                            {/* "recovered,deaths,lastReported,lastChecked" */}
+                            <div>
+                                <Checkbox
+                                /* open={celcius} */
+                                defaultChecked
+                                color="primary"
+                                inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                onClick={setDeaths}
+                                />
+                                Deaths
+                            </div>
+                            <div>
+                                <Checkbox
+                                /* open={celcius} */
+                                defaultChecked
+                                color="primary"
+                                inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                onClick={setLastReported}
+                                />
+                                Last Reported
+                            </div>
+                            <div>
+                                <Checkbox
+                                /* open={celcius} */
+                                defaultChecked
+                                color="primary"
+                                inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                onClick={setLastChecked}
+                                />
+                                Last Checked
                             </div>
                         </FormControl>
                     </form>

@@ -15,6 +15,7 @@ import GridLayout from 'react-grid-layout';
 import SimpleCard from './card.js';
 import UserAuth from "./Auth";
 import CovidSettings from "./SettingsWidget/settingsCovid";
+import WidgetCoinranking from './SettingsWidget/settingCoinranking.js';
 
 const drawerWidth = 240;
 
@@ -82,6 +83,7 @@ class Dashboard extends React.Component {
       history.push("/");
       return;
     }
+
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -104,6 +106,7 @@ class Dashboard extends React.Component {
           <WidgetWeather fct={this.pushWidgetTest}/>
           <WidgetGmail/>
           <WidgetGithub/>
+          <WidgetCoinranking/>
           <CovidSettings fct={this.pushWidgetTest}/>
           <Button variant="contained" color="primary" onClick={this.logOut}>Logout</Button>
         </Drawer>

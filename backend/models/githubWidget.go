@@ -2,16 +2,32 @@ package models
 
 import "gorm.io/gorm"
 
-type GithubWidgets struct {
+type GithubWidget struct {
 	gorm.Model
 	GithubId int  `json:"github_id"`
+	Timer    int  `json:"timer"`
 	UserID   uint `json:"user_id"`
 }
 
-type RepositoryWidgets struct {
-	gorm.Model
-	UserName string `gorm:"size:100" json:"user_name"`
-	RepoName string `gorm:"size:100" json:"repo_name"`
-	//GithubId    int    `json:"github_id"`
-	UpdateTimer int `json:"update_timer"`
+func NewGithubWidget(userID uint, covType, country string, fields string, timer int) *GithubWidget {
+	return &GithubWidget{
+		UserID: userID,
+		Timer:  timer,
+	}
+}
+
+func (cw *GithubWidget) Save(db *gorm.DB) error {
+	err := db.Debug().Create(&cw).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (cw *GithubWidget) FindByID(db *gorm.DB, uid uint) error {
+	err := db.Debug().Model(GithubWidget{}).Where("id = ?", uid).Take(&cw).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

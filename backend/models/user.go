@@ -18,8 +18,10 @@ type User struct {
 	//Email       string `gorm:"size:100;not null;unique" json:"email"`
 	//GithubId    int    `gorm:"size:100;unique" json:"github_id"`
 	//GoogleEmail string `gorm:"size:100;unique" json:"google_email"`
-	Password     string        `gorm:"size:100;not null;" json:"password"`
-	CovidWidgets []CovidWidget `json:"covid_widgets"`
+	Password       string          `gorm:"size:100;not null;" json:"password"`
+	CovidWidgets   []CovidWidget   `json:"covid_widgets"`
+	CoinWidgets    []CoinWidget    `json:"coin_widgets"`
+	WeatherWidgets []WeatherWidget `json:"weather_widgets"`
 }
 
 func Hash(password string) ([]byte, error) {

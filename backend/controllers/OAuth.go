@@ -71,7 +71,7 @@ func GetGithubUserID(c *gin.Context, code string) (int, error) {
 	if !ok {
 		return 0, fmt.Errorf("got data of type %T but wanted int\n", dat["id"])
 	}
-	log.Println(int(fId))
+	//log.Println(int(fId))
 	return int(fId), nil
 }
 

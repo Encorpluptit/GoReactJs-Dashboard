@@ -5,9 +5,13 @@ const UserAuth = (function () {
     const setToken = function (tok) {
         sessionStorage.setItem('token', tok);
     };
+    const clear = function () {
+        sessionStorage.clear();
+    };
     return {
         getToken: getToken,
-        setToken: setToken
+        setToken: setToken,
+        clear: clear
     }
 })();
 

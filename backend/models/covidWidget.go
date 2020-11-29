@@ -24,6 +24,7 @@ func NewCovidWidget(userID uint, covType, country string, fields string, timer i
 	return &CovidWidget{
 		UserID:  userID,
 		Type:    covType,
+		Timer:   timer,
 		Country: country,
 		Fields:  fields,
 	}

@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { useHistory } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import './dashboard.css';
 import WidgetGithub from './SettingsWidget/settingsGithub.js';
 import WidgetGmail from './SettingsWidget/settingsGmail.js';
@@ -13,7 +13,8 @@ import WidgetWeather from './SettingsWidget/settingsWeather.js';
 import { withStyles } from '@material-ui/core/styles';
 import GridLayout from 'react-grid-layout';
 import SimpleCard from './card.js';
-import {TextFields} from "@material-ui/icons";
+import UserAuth from "./Auth";
+import CovidSettings from "./SettingsWidget/settingsCovid";
 
 const drawerWidth = 240;
 
@@ -41,6 +42,9 @@ const useStyles = theme => ({
   },
 });
 
+function GetHistory() {
+  return useHistory()
+}
 
 class Dashboard extends React.Component {
 
@@ -50,11 +54,24 @@ class Dashboard extends React.Component {
       gridCard: [],
     };
     this.pushWidgetTest = this.pushWidgetTest.bind(this)
+    this.logOut = this.logOut.bind(this)
   }
 
-  handleClick = e => {
-    this.props.history.push("/");
-  };
+
+  logOut = () => {
+    const { history } = this.props;
+    UserAuth.clear()
+    if(history) history.push('/');
+  }
+  //
+  // logOut = () => {
+  //   UserAuth.clear()
+  //   this.history().push("/");
+  // };
+
+  // handleClick = e => {
+  //   this.props.history.push("/");
+  // };
 
   pushWidget1() {
     console.log("PTDR PUUUUUUSH");
@@ -72,7 +89,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
     const layout = [
       {i: 'a', x: 0, y: 0, w: 1, h: 2},
       {i: 'b', x: 5, y: 0, w: 1, h: 2},
@@ -80,6 +97,10 @@ class Dashboard extends React.Component {
     ];
     /* const handleOnClick = useCallback(() => history.push('/'), [history]); */
 
+    if (UserAuth.getToken() === "") {
+      history.push("/");
+      return;
+    }
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -102,10 +123,11 @@ class Dashboard extends React.Component {
           <WidgetWeather fct={this.pushWidgetTest}/>
           <WidgetGmail></WidgetGmail>
           <WidgetGithub></WidgetGithub>
-          <Button variant="contained" color="primary" onClick={this.handleClick}>Logout</Button>
+          <CovidSettings fct={this.pushWidgetTest}/>
+          <Button variant="contained" color="primary" onClick={this.logOut}>Logout</Button>
         </Drawer>
         <main className={classes.content}>
-          <GridLayout className="layout" layout={layout} cols={12} rowHeight={30} width={1200}>
+          <GridLayout className="layout" layout={layout} cols={6} rowHeight={50} width={1200}>
             <div key="a">{this.state.gridCard}</div>
           </GridLayout>
           <div className={classes.toolbar} />
@@ -115,7 +137,7 @@ class Dashboard extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(Dashboard)
+export default withRouter(withStyles(useStyles)(Dashboard))
 
 
 

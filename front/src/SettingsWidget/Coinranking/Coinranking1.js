@@ -30,14 +30,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Weather1(props) {
+export default function Coinranking1(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const pushGrid = () => props.fct(<SimpleCard></SimpleCard>)
 
-  const [city, setCity] = React.useState('');
-  const [celcius, setCelcius] = React.useState(false);
-  const [fahreneit, setFahreneit] = React.useState(false);
+  const [TotalCoins, setCoins] = React.useState(false);
+  const [TotalMarkets, setMarkets] = React.useState(false);
+  const [TotalExchanges, setExchanges] = React.useState(false);
+  const [TotalMarketCap, setMarketCap] = React.useState(false);
+  const [Total24hVolume, setTotal24hVolume] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -57,7 +59,7 @@ export default function Weather1(props) {
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
       >
-        <DialogTitle id="max-width-dialog-title">Weather Widget Configuration</DialogTitle>
+        <DialogTitle id="max-width-dialog-title">Coinranking Widget Configuration</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Configure your widget
@@ -65,27 +67,51 @@ export default function Weather1(props) {
           <form className={classes.form} noValidate>
             <FormControl className={classes.formControl}>
             <div>
-              <TextField label="City" id="standard-size-small" defaultValue="City" size="small" onChange={(e) => setCity(e.target.value)} />
+              <TextField label="City" id="standard-size-small" defaultValue="City" size="small" />
             </div>
             <div>
             <Checkbox
-              open={celcius}
+              /* open={celcius} */
               defaultChecked
               color="primary"
               inputProps={{ 'aria-label': 'secondary checkbox' }}
-              onClick={setCelcius}
+              onClick={setCoins}
             />
-            Celcius
+            TotalCoins
             </div>
             <div>
             <Checkbox
-              open={fahreneit}
+              /* open={fahreneit} */
               defaultChecked
               color="primary"
               inputProps={{ 'aria-label': 'secondary checkbox' }}
-              onClick={setFahreneit}
+              onClick={setMarkets}
             />
-            Fahreneit
+            TotalMarkets
+            <Checkbox
+              /* open={fahreneit} */
+              defaultChecked
+              color="primary"
+              inputProps={{ 'aria-label': 'secondary checkbox' }}
+              onClick={setExchanges}
+            />
+            TotalExchanges
+            <Checkbox
+              /* open={fahreneit} */
+              defaultChecked
+              color="primary"
+              inputProps={{ 'aria-label': 'secondary checkbox' }}
+              onClick={setMarketCap}
+            />
+            TotalMarketCap
+            <Checkbox
+              /* open={fahreneit} */
+              defaultChecked
+              color="primary"
+              inputProps={{ 'aria-label': 'secondary checkbox' }}
+              onClick={setTotal24hVolume}
+            />
+            Total24hVolume
             </div>
             </FormControl>
           </form>

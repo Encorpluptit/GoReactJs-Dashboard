@@ -5,8 +5,8 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Weather1 from './Weather/Weather1.js'
-import Weather2 from './Weather/Weather2.js'
+import Coinranking1 from './Coinranking/Coinranking1.js'
+import Coinranking2 from './Coinranking/Coinranking2.js'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function WidgetWeather(props) {
+export default function WidgetCoinranking(props) {
   const classes = useStyles();
 
   return (
@@ -31,11 +31,11 @@ export default function WidgetWeather(props) {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>Weather</Typography>
+          <Typography className={classes.heading}>Coinranking</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Weather1 fct={props.fct}>Widget 1</Weather1>
-          <Weather2>Widget 2</Weather2>
+          <Coinranking1 fct={props.fct}>Coinranking 1</Coinranking1>
+          <Coinranking2>Coinranking 2</Coinranking2>
         </AccordionDetails>
       </Accordion>
     </div>

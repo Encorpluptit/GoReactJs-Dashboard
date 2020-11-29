@@ -193,14 +193,14 @@ export default function NewsWidgetCore(props) {
             + (date ? 'date,' : '')
             + (sourceName ? 'source_name,' : '')
             + (newsUrl ? 'url' : '')
-        FetchCovid(timer, topic, newsType, fields)
+        FetchNews(timer, topic, newsType, fields)
         handleClose()
     }
     const pushGrid = (obj) => {
         props.fct(obj)
     }
 
-    const FetchCovid = (timer, topic, covType, fields) => {
+    const FetchNews = (timer, topic, covType, fields) => {
         const requestOptions = {
             method: 'POST',
             headers: {

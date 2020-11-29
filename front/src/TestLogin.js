@@ -79,7 +79,7 @@ export default function TestLogin() {
                 <Typography component="h1" variant="h5">
                     TestLogin
                 </Typography>
-                <CovidWidget timer={30} covType={"Country"} fields={"recovered,deaths,lastReported,lastChecked"}/>
+                {/*<CovidWidget timer={30} covType={"Country"} fields={"recovered,deaths,lastReported,lastChecked"}/>*/}
                 <MyButton
                     // type="submit"
                     fullWidth

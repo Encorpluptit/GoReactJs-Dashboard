@@ -1,10 +1,10 @@
 package router
 
 import (
+	"AppDev_DashBoard/auth"
 	"AppDev_DashBoard/controllers"
 	"AppDev_DashBoard/models"
 	"errors"
-	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
@@ -12,6 +12,8 @@ import (
 	"net/http"
 	"os"
 )
+
+const RapidAPIKey = "3756035059msh7fa332adcf87e69p13e21djsn7f3750733c19"
 
 // login: Log User with Queries Username and Password.
 // Abort when error occurs.
@@ -24,7 +26,9 @@ func login(c *gin.Context) {
 	if userFound, err := controllers.Login(user); err != nil {
 		_ = c.AbortWithError(InternalError, err)
 	} else {
-		c.JSON(http.StatusCreated, userFound)
+		tok, _ := auth.CreateToken(userFound.ID)
+		//c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FRONT_URL")+"/login/success?token="+tok)
+		c.JSON(http.StatusCreated, tok)
 	}
 }
 
@@ -47,75 +51,56 @@ func register(c *gin.Context) {
 }
 
 func githubAuth(ctx *gin.Context) {
-	//ctx := context.Background()
-	//conf := &oauth2.Config{
-	//	ClientID:     "a758719d422863f322f7",
-	//	ClientSecret: "a9a92ef0f4156ee312c41effd65589f36d5c4bca",
-	//	//Scopes:       []string{"SCOPE1", "SCOPE2"},
-	//	Scopes: []string{"user"},
-	//	Endpoint: oauth2.Endpoint{
-	//		AuthURL:  "https://github.com/login/oauth/authorize",
-	//		TokenURL: "https://github.com/login/oauth/access_token",
-	//	},
-	//}
-
 	// Redirect user to consent page to ask for permission
 	// for the scopes specified above.
-	//url := conf.AuthCodeURL("state", oauth2.AccessTypeOffline)
-	//url := conf.AuthCodeURL("state", oauth2.AccessTypeOffline)
-	url := controllers.GithubConf.AuthCodeURL("state", oauth2.AccessTypeOnline)
-	fmt.Printf("Visit the URL for the auth dialog: %v\n", url)
+	url := controllers.GetGithubConf().AuthCodeURL("state", oauth2.AccessTypeOffline)
+	//fmt.Printf("Visit the URL for the auth dialog: %v\n", url)
 	ctx.Redirect(http.StatusTemporaryRedirect, url)
-
-	// Use the authorization code that is pushed to the redirect
-	// URL. Exchange will do the handshake to retrieve the
-	// initial access token. The HTTP Client returned by
-	// conf.Client will refresh the token as necessary.
-	//var code string
-	//if _, err := fmt.Scan(&code); err != nil {
-	//	log.Fatal(err)
-	//}
-	//tok, err := conf.Exchange(ctx, code)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//client := conf.Client(ctx, tok)
-	//resp, err := client.Get("https://api.github.com/users/encorpluptit/repos")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//if resp.StatusCode == http.StatusOK {
-	//	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
-	//	bodyString := string(bodyBytes)
-	//	log.Println(bodyString)
-	//}
 }
 
 func githubAuthSuccess(c *gin.Context) {
-	// Use the authorization code that is pushed to the redirect
-	// URL. Exchange will do the handshake to retrieve the
-	// initial access token. The HTTP Client returned by
-	// githubConf.Client will refresh the token as necessary.
+	// TODO: Maybe to put in GithubOAuthSuccess middleware
 	code := c.Query("code")
 	if code == "" {
 		log.Println("NO CODE IN QUERY From Url by Github")
-		c.Redirect(http.StatusMovedPermanently, os.Getenv("FRONT_URL"))
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FRONT_URL"))
 		return
 	}
 	log.Printf("In %s: code -> %s", c.HandlerName(), code)
 
 	session := sessions.Default(c)
-	session.Set("GithubToken", code)
-	session.Save()
-	//frontUrl := os.Getenv("FRONT_URL")
-	//if frontUrl == "" {
-	//	log.Fatal("FrontUrl")
-	//}
-	//log.Printf("In %s: frontUrl -> %s", c.HandlerName(), frontUrl+"/dashboard")
-	////c.Next()
-	//c.Redirect(http.StatusMovedPermanently, frontUrl+"/dashboard")
+	session.Set(controllers.GithubCodeKey, code)
+	if err := session.Save(); err != nil {
+		log.Fatal("In githubAuthSuccess, failed on session save ->", err)
+	}
+}
+
+func googleAuth(ctx *gin.Context) {
+	// Redirect user to consent page to ask for permission
+	// for the scopes specified above.
+	url := controllers.GetGoogleConf().AuthCodeURL("state", oauth2.AccessTypeOffline)
+	//url := controllers.GetGoogleConf().AuthCodeURL("state", oauth2.AccessTypeOnline)
+	//fmt.Printf("Visit the URL for the auth dialog: %v\n", url)
+	ctx.Redirect(http.StatusTemporaryRedirect, url)
+}
+
+func googleAuthSuccess(c *gin.Context) {
+	// TODO: Maybe to put in GoogleOAuthSuccess middleware
+	code := c.Query("code")
+	if code == "" {
+		log.Println("NO CODE IN QUERY From Url by Google")
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FRONT_URL"))
+		return
+	}
+	session := sessions.Default(c)
+	session.Set(controllers.GoogleCodeKey, code)
+	if err := session.Save(); err != nil {
+		log.Fatal("In googleAuthSuccess, failed on session save ->", err)
+	}
+	log.Printf("In %s: code -> %v : %T\n", c.HandlerName(), code, code)
+}
+
+func addRapidApiHeaders(req *http.Request, host string) {
+	req.Header.Add("x-rapidapi-key", RapidAPIKey)
+	req.Header.Add("x-rapidapi-host", host)
 }

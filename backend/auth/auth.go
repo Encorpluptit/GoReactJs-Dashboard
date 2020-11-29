@@ -3,21 +3,20 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/dgrijalva/jwt-go"
 )
 
 type Token struct {
 	Token string
 }
 
-func CreateToken(userId uint32) (string, error) {
+func CreateToken(userId uint) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["user_id"] = userId
@@ -37,9 +36,12 @@ func TokenValid(r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		Pretty(claims)
+	if _, ok := token.Claims.(jwt.MapClaims); !ok || !token.Valid {
+		log.Fatal("PB with Token")
 	}
+	//if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+	//	Pretty(claims)
+	//}
 	return nil
 }
 
@@ -56,7 +58,7 @@ func ExtractToken(r *http.Request) string {
 	return ""
 }
 
-func ExtractTokenID(r *http.Request) (uint32, error) {
+func ExtractTokenID(r *http.Request) (uint, error) {
 	tokenString := ExtractToken(r)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -73,7 +75,7 @@ func ExtractTokenID(r *http.Request) (uint32, error) {
 		if err != nil {
 			return 0, err
 		}
-		return uint32(uid), nil
+		return uint(uid), nil
 	}
 	return 0, nil
 }

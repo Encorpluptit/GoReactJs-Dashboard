@@ -15,6 +15,7 @@ import (
 type Database struct {
 	DB       *gorm.DB
 	Driver   string
+	Url      string
 	Name     string
 	Host     string
 	Port     string
@@ -28,7 +29,7 @@ var BackendDB = &Database{}
 // Init : open database stream in BackendDB variable (create database if not present)
 func Init() (db *Database, err error) {
 	BackendDB.prepareEnv()
-	if os.Getenv("GIN_MODE") == "release" {
+	if os.Getenv("API_STATE") == "RELEASE" {
 		//BackendDB.DB, err = gorm.Open(sqlite.Open("prod.db"), &gorm.Config{})
 		err = BackendDB.initPostGreSql()
 	} else {
@@ -44,9 +45,10 @@ func Init() (db *Database, err error) {
 // Load env from .env file (production) or deployment env
 func (db *Database) prepareEnv() {
 	db.Driver = os.Getenv("DB_DRIVER")
-	db.Name = os.Getenv("DB_NAME")
+	db.Url = os.Getenv("DATABASE_URL")
 	db.Host = os.Getenv("DB_HOST")
 	db.Port = os.Getenv("DB_PORT")
+	db.Name = os.Getenv("DB_NAME")
 	db.User = os.Getenv("DB_USER")
 	db.Password = os.Getenv("DB_PASSWORD")
 }
@@ -79,8 +81,7 @@ func (db *Database) initMySql() (err error) {
 // Initialise Postgresql Db
 func (db *Database) initPostGreSql() (err error) {
 	//url := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", db.Host, db.Port, db.User, db.Name, db.Password)
-	url := os.Getenv("DATABASE_URL")
-	db.DB, err = gorm.Open(postgres.Open(url), &gorm.Config{})
+	db.DB, err = gorm.Open(postgres.Open(db.Url), &gorm.Config{})
 	if err != nil {
 		fmt.Printf("Cannot connect to %s database", db.Driver)
 		log.Fatal("This is the error:", err)
@@ -92,7 +93,8 @@ func (db *Database) initPostGreSql() (err error) {
 
 // Auto migrate models
 func (db *Database) autoMigrate() (err error) {
-	err = db.DB.Debug().AutoMigrate(&models.User{}) //database migration
+	err = db.DB.Debug().AutoMigrate(&models.User{})        //database migration
+	err = db.DB.Debug().AutoMigrate(&models.CovidWidget{}) //database migration
 	return nil
 }
 

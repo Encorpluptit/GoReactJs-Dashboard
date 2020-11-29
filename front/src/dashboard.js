@@ -13,6 +13,7 @@ import WidgetWeather from './SettingsWidget/settingsWeather.js';
 import { withStyles } from '@material-ui/core/styles';
 import GridLayout from 'react-grid-layout';
 import SimpleCard from './card.js';
+import {TextFields} from "@material-ui/icons";
 
 const drawerWidth = 240;
 
@@ -46,7 +47,7 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      gridCard: []
+      gridCard: [],
     };
     this.pushWidgetTest = this.pushWidgetTest.bind(this)
   }
@@ -60,12 +61,14 @@ class Dashboard extends React.Component {
     this.state.gridCard.push(<SimpleCard></SimpleCard>);
   }
 
-  pushWidgetTest() {
+  pushWidgetTest = (obj) => {
+    this.setState(state => {
+      const gridCard = state.gridCard.concat(obj);
+      return {
+        gridCard,
+      };
+    });
     console.log("PTDR PUUUUUUSH");
-    this.setState({
-      gridCard: this.state.gridCard.push(<SimpleCard>COUCOU</SimpleCard>)
-    })
-    this.state.gridCard.push(<SimpleCard>COUCOU</SimpleCard>);
   }
 
   render() {

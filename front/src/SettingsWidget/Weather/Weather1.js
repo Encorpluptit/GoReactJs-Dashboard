@@ -9,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Dashboard from '../../dashboard.js'
+import SimpleCard from "../../card";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Weather1(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const pushGrid = () => props.fct()
+  const pushGrid = () => props.fct(<SimpleCard></SimpleCard>)
 
   const handleClickOpen = () => {
     setOpen(true);

@@ -167,16 +167,16 @@ class CovidWidget extends Component {
                         <Typography paragraph>Last checked: {lastChecked}</Typography>
                         <Typography paragraph>
                             {(items.length === 1 &&
-                                    <Typography paragraph>
-                                      {items[0].country}
-                                        <ul>
-                                            {fields.confirmed && <li>confirmed: {items[0].confirmed}</li>}
-                                            {fields.deaths && <li>deaths: {items[0].deaths}</li>}
-                                            {fields.recovered && <li>recovered: {items[0].recovered}</li>}
-                                            {fields.lastChecked && <li>Last checked: {items[0].lastChecked}</li>}
-                                            {fields.lastReported && <li>Last reported: {items[0].lastReported}</li>}
-                                        </ul>
-                                    </Typography>
+                                <Typography paragraph>
+                                    {items[0].country}
+                                    <ul>
+                                        {fields.confirmed && <li>confirmed: {items[0].confirmed}</li>}
+                                        {fields.deaths && <li>deaths: {items[0].deaths}</li>}
+                                        {fields.recovered && <li>recovered: {items[0].recovered}</li>}
+                                        {fields.lastChecked && <li>Last checked: {items[0].lastChecked}</li>}
+                                        {fields.lastReported && <li>Last reported: {items[0].lastReported}</li>}
+                                    </ul>
+                                </Typography>
                             ) || <ul>
                                 {items.map(item => (
                                     <li>
@@ -205,16 +205,24 @@ class CovidWidget extends Component {
 export default function CovidTotal(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const [timer] = React.useState('30');
-    const [country] = React.useState('France');
-    const [fields] = React.useState('confirmed,recovered,deaths,lastReported,lastChecked');
-    const [confirmed, setConfirmed] = React.useState(false);
-    const [recovered, setRecovered] = React.useState(false);
-    const [deaths, setDeaths] = React.useState(false);
-    const [reported, setLastReported] = React.useState(false);
-    const [checked, setLastChecked] = React.useState(false);
-    const FetchData = () => FetchCovid(timer, country, covType, fields)
-    const covType = "Total";
+    const [timer, setTimer] = React.useState('');
+    const [country, setCountry] = React.useState('');
+    const [confirmed, setConfirmed] = React.useState(true);
+    const [recovered, setRecovered] = React.useState(true);
+    const [deaths, setDeaths] = React.useState(true);
+    const [reported, setLastReported] = React.useState(true);
+    const [checked, setLastChecked] = React.useState(true);
+    const FetchData = () => {
+        const fields =
+            (confirmed ? 'confirmed,' : '')
+            + (recovered ? 'recovered,' : '')
+            + (deaths ? 'deaths,' : '')
+            + (reported ? 'lastReported,' : '')
+            + (checked ? 'lastChecked' : '')
+        FetchCovid(timer, country, covType, fields)
+        handleClose()
+    }
+    const covType = props.covType || "Total";
     const pushGrid = (obj) => {
         props.fct(obj)
     }
@@ -256,72 +264,77 @@ export default function CovidTotal(props) {
     return (
         <React.Fragment>
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                Widget 1
+                {covType}
             </Button>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="max-width-dialog-title"
             >
-                <DialogTitle id="max-width-dialog-title">Covid 19 Stats</DialogTitle>
+                <DialogTitle id="max-width-dialog-title">Covid 19</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        You can do that
+                        {covType}
                     </DialogContentText>
                     <form className={classes.form} noValidate>
                         <FormControl className={classes.formControl}>
                             <div>
-                                <TextField label="Total Numbers" id="standard-size-small" defaultValue="Small"
-                                           size="small"/>
+                                <TextField
+                                    label="Country" id="standard-size-small" defaultValue="Small"
+                                    onChange={(e) => setCountry(e.target.value)}
+                                    size="small"/>
+                                <TextField
+                                    label="Timer" id="standard-size-small" defaultValue="Small"
+                                    onChange={(e) => setTimer(e.target.value)}
+                                    size="small"/>
                             </div>
                             <div>
                                 <Checkbox
-                                /* open={celcius} */
-                                defaultChecked
-                                color="primary"
-                                inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                onClick={setConfirmed}
+                                    /* open={celcius} */
+                                    defaultChecked
+                                    color="primary"
+                                    inputProps={{'aria-label': 'secondary checkbox'}}
+                                    onClick={(e) => setConfirmed(e.target.checked ? !e.target.checked : e.target.checked)}
                                 />
                                 Confirmed
                             </div>
                             <div>
                                 <Checkbox
-                                /* open={celcius} */
-                                defaultChecked
-                                color="primary"
-                                inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                onClick={setRecovered}
+                                    /* open={celcius} */
+                                    defaultChecked
+                                    color="primary"
+                                    inputProps={{'aria-label': 'secondary checkbox'}}
+                                    onClick={(e) => setRecovered(e.target.checked ? !e.target.checked : e.target.checked)}
                                 />
                                 Recovered
                             </div>
-                            {/* "recovered,deaths,lastReported,lastChecked" */}
                             <div>
                                 <Checkbox
-                                /* open={celcius} */
-                                defaultChecked
-                                color="primary"
-                                inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                onClick={setDeaths}
+                                    /* open={celcius} */
+                                    defaultChecked
+                                    color="primary"
+                                    inputProps={{'aria-label': 'secondary checkbox'}}
+                                    onClick={(e) => setDeaths(e.target.checked ? !e.target.checked : e.target.checked)}
                                 />
                                 Deaths
                             </div>
                             <div>
                                 <Checkbox
-                                /* open={celcius} */
-                                defaultChecked
-                                color="primary"
-                                inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                onClick={setLastReported}
+                                    /* open={celcius} */
+                                    defaultChecked
+                                    color="primary"
+                                    inputProps={{'aria-label': 'secondary checkbox'}}
+                                    onClick={(e) => setLastReported(e.target.checked ? !e.target.checked : e.target.checked)}
                                 />
                                 Last Reported
                             </div>
                             <div>
                                 <Checkbox
-                                /* open={celcius} */
-                                defaultChecked
-                                color="primary"
-                                inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                onClick={setLastChecked}
+                                    /* open={celcius} */
+                                    defaultChecked
+                                    color="primary"
+                                    inputProps={{'aria-label': 'secondary checkbox'}}
+                                    onClick={(e) => setLastChecked(e.target.checked ? !e.target.checked : e.target.checked)}
                                 />
                                 Last Checked
                             </div>
@@ -329,10 +342,10 @@ export default function CovidTotal(props) {
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={FetchData} color="primary">
                         Save
                     </Button>
-                    <Button onClick={FetchData} color="primary">
+                    <Button onClick={handleClose} color="primary">
                         Close
                     </Button>
                 </DialogActions>

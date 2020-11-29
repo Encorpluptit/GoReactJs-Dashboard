@@ -33,8 +33,8 @@ export default function CovidSettings(props) {
           <Typography className={classes.heading}>Covid19</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <CovidTotal fct={props.fct}>Total Country</CovidTotal>
-          {/*<Covid widget={{ID:1, type:"Total", fields:"recovered,deaths,lastReported,lastChecked"}}/>*/}
+          <CovidTotal fct={props.fct} covType={"Total"}>Total </CovidTotal>
+          <CovidTotal fct={props.fct} covType={"Stat"}>Stat </CovidTotal>
         </AccordionDetails>
       </Accordion>
     </div>

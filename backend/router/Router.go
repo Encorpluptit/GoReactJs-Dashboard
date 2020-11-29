@@ -71,7 +71,8 @@ func ApplyRoutes(r *gin.Engine, store gin.HandlerFunc) {
 	}
 	githubWidgets := r.Group("/" + rGithub).Use(middlewares.GithubMiddleware())
 	{
-		githubWidgets.GET("/repo", GithubRepo)
+		githubWidgets.GET("/create", createGithubWidget)
+		githubWidgets.GET("/get/:id", getGithubWidget)
 	}
 	googleWidgets := r.Group("/" + rGoogle).Use(middlewares.GoogleMiddleware())
 	{

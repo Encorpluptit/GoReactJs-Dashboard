@@ -32,8 +32,8 @@ func FindGithubByID(id uint) (*models.GithubWidget, error) {
 	return widget, nil
 }
 
-func CreateGithub(userID uint, covType, country string, fields string, timer int) (*models.GithubWidget, error) {
-	widget := models.NewGithubWidget(userID, covType, country, fields, timer)
+func CreateGithub(userID uint, authType, widgetType string, fields string, timer int) (*models.GithubWidget, error) {
+	widget := models.NewGithubWidget(userID, authType, widgetType, fields, timer)
 
 	if err := widget.Save(database.BackendDB.DB); err != nil {
 		return nil, err

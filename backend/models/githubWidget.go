@@ -4,15 +4,20 @@ import "gorm.io/gorm"
 
 type GithubWidget struct {
 	gorm.Model
-	GithubId int  `json:"github_id"`
-	Timer    int  `json:"timer"`
-	UserID   uint `json:"user_id"`
+	Timer      int    `json:"timer"`
+	UserID     uint   `json:"user_id"`
+	AuthType   string `gorm:"size:100" json:"auth_type"`
+	WidgetType string `gorm:"size:100" json:"widget_type"`
+	Fields     string `gorm:"size:100" json:"fields"`
 }
 
-func NewGithubWidget(userID uint, covType, country string, fields string, timer int) *GithubWidget {
+func NewGithubWidget(userID uint, authType, widgetType string, fields string, timer int) *GithubWidget {
 	return &GithubWidget{
-		UserID: userID,
-		Timer:  timer,
+		UserID:     userID,
+		Timer:      timer,
+		AuthType:   authType,
+		WidgetType: widgetType,
+		Fields:     fields,
 	}
 }
 

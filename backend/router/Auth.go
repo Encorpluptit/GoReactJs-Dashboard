@@ -18,7 +18,6 @@ const RapidAPIKey = "3756035059msh7fa332adcf87e69p13e21djsn7f3750733c19"
 // login: Log User with Queries Username and Password.
 // Abort when error occurs.
 func login(c *gin.Context) {
-	log.Println("LOL ICI")
 	user := &models.User{
 		Username: c.Query("Username"),
 		Password: c.Query("Password"),

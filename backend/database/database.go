@@ -93,8 +93,11 @@ func (db *Database) initPostGreSql() (err error) {
 
 // Auto migrate models
 func (db *Database) autoMigrate() (err error) {
-	err = db.DB.Debug().AutoMigrate(&models.User{})        //database migration
-	err = db.DB.Debug().AutoMigrate(&models.CovidWidget{}) //database migration
+	err = db.DB.Debug().AutoMigrate(&models.User{})          //database migration
+	err = db.DB.Debug().AutoMigrate(&models.CovidWidget{})   //database migration
+	err = db.DB.Debug().AutoMigrate(&models.WeatherWidget{}) //database migration
+	err = db.DB.Debug().AutoMigrate(&models.CoinWidget{})    //database migration
+	err = db.DB.Debug().AutoMigrate(&models.GithubWidget{})  //database migration
 	return nil
 }
 
